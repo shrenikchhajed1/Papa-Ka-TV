@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papa Ka TV - पापा का टीवी</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== HOME SCREEN ===== */
+        #home-screen {
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #home-screen h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            color: #e94560;
+            text-align: center;
+        }
+
+        #home-screen .subtitle {
+            font-size: 22px;
+            color: #aaa;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #e94560;
+            margin: 30px 0 16px 0;
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            border-top: 2px solid #333;
+            padding-top: 24px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .grid-btn {
+            background: linear-gradient(135deg, #16213e, #0f3460);
+            border: 3px solid #e94560;
+            border-radius: 16px;
+            padding: 24px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            user-select: none;
+        }
+
+        .grid-btn:hover {
+            background: linear-gradient(135deg, #e94560, #c0392b);
+            transform: scale(1.04);
+            box-shadow: 0 8px 30px rgba(233, 69, 96, 0.4);
+        }
+
+        .grid-btn:active {
+            transform: scale(0.97);
+        }
+
+        .grid-btn .hindi-name {
+            font-size: 26px;
+            font-weight: bold;
+            color: #fff;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .grid-btn .eng-name {
+            font-size: 16px;
+            color: #ccc;
+            display: block;
+        }
+
+        /* LIVE / RECORDED badge */
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            padding: 2px 10px;
+            border-radius: 8px;
+        }
+        .live-badge.is-live {
+            color: #fff;
+            background: rgba(231, 76, 60, 0.35);
+        }
+        .live-badge.is-live .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e74c3c;
+            animation: pulse-dot 1.2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+        .live-badge.not-live {
+            color: #999;
+            background: rgba(255,255,255,0.08);
+        }
+        /* Smaller badge for bottom strip buttons */
+        .strip-live-badge {
+            font-size: 9px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-left: 6px;
+            padding: 1px 5px;
+            border-radius: 4px;
+            vertical-align: middle;
+        }
+        .strip-live-badge.is-live {
+            color: #fff;
+            background: rgba(231, 76, 60, 0.5);
+        }
+        .strip-live-badge.not-live {
+            color: #888;
+            background: rgba(255,255,255,0.1);
+        }
+        /* Now-playing LIVE indicator */
+        .now-playing-live {
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-left: 10px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            vertical-align: middle;
+        }
+        .now-playing-live.is-live {
+            color: #fff;
+            background: #e74c3c;
+        }
+        .now-playing-live.not-live {
+            color: #999;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Songs button on home - bigger and distinct */
+        .songs-nav-btn {
+            background: linear-gradient(135deg, #0f3460, #533483);
+            border: 3px solid #e94560;
+            border-radius: 20px;
+            padding: 32px 40px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            user-select: none;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+
+        .songs-nav-btn:hover {
+            background: linear-gradient(135deg, #533483, #e94560);
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(233, 69, 96, 0.4);
+        }
+
+        .songs-nav-btn:active {
+            transform: scale(0.97);
+        }
+
+        .songs-nav-btn .hindi-name {
+            font-size: 36px;
+            font-weight: bold;
+            color: #fff;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .songs-nav-btn .eng-name {
+            font-size: 20px;
+            color: #ccc;
+            display: block;
+        }
+
+        /* ===== ARTIST GRID SCREEN ===== */
+        #artist-screen {
+            display: none;
+            padding: 30px 40px;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #artist-screen h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            color: #e94560;
+            text-align: center;
+        }
+
+        #artist-screen .subtitle {
+            font-size: 22px;
+            color: #aaa;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .back-home-btn {
+            background: #e94560;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            margin-bottom: 24px;
+        }
+
+        .back-home-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .back-home-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* ===== PLAYER SCREEN ===== */
+        #player-screen {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            background: #0a0a1a;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: #16213e;
+            border-bottom: 3px solid #e94560;
+        }
+
+        .now-playing {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e94560;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-left: 16px;
+        }
+
+        .back-btn {
+            background: #e94560;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .back-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .player-area {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* Volume control - left side */
+        .volume-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 12px;
+            background: #16213e;
+            width: 80px;
+            gap: 10px;
+            border-right: 2px solid #333;
+        }
+
+        .vol-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 3px solid #e94560;
+            background: #0f3460;
+            color: #fff;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            user-select: none;
+            line-height: 1;
+        }
+
+        .vol-btn:hover {
+            background: #e94560;
+            transform: scale(1.1);
+        }
+
+        .vol-btn:active {
+            transform: scale(0.9);
+        }
+
+        .volume-slider-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 100px;
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 200px;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            outline: none;
+            transform: rotate(-90deg);
+            transform-origin: center center;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e94560;
+            cursor: pointer;
+            border: 3px solid #fff;
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e94560;
+            cursor: pointer;
+            border: 3px solid #fff;
+        }
+
+        .vol-value {
+            font-size: 18px;
+            color: #e94560;
+            font-weight: bold;
+        }
+
+        .video-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            min-height: 0;
+            position: relative;
+        }
+
+        #yt-player {
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-message {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.85);
+            z-index: 10;
+            gap: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .video-message .msg-text {
+            font-size: 22px;
+            color: #ccc;
+        }
+
+        .video-message .open-link {
+            background: #e94560;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .video-message .open-link:hover {
+            background: #c0392b;
+        }
+
+        /* Artist strip - horizontal scrollable row below top bar */
+        .artist-strip {
+            display: flex;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #1a1a3e;
+            border-bottom: 2px solid #533483;
+            overflow-x: auto;
+            align-items: center;
+        }
+
+        .artist-strip-btn {
+            flex-shrink: 0;
+            background: #0f3460;
+            border: 2px solid #533483;
+            border-radius: 10px;
+            padding: 8px 18px;
+            color: #ccc;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .artist-strip-btn:hover {
+            border-color: #e94560;
+            color: #fff;
+            background: #1a2a5e;
+        }
+
+        .artist-strip-btn.active {
+            background: #533483;
+            border-color: #e94560;
+            color: #fff;
+        }
+
+        /* Right-side song list panel */
+        .song-panel {
+            width: 300px;
+            min-width: 300px;
+            background: #12122a;
+            border-left: 2px solid #333;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .song-panel-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e94560;
+            padding: 10px 14px;
+            border-bottom: 1px solid #333;
+            background: #16213e;
+            text-align: center;
+        }
+
+        .song-panel-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border-bottom: 1px solid #1a1a3e;
+            user-select: none;
+        }
+
+        .song-panel-item:hover {
+            background: #1a2a5e;
+        }
+
+        .song-panel-item.active {
+            background: #e94560;
+        }
+
+        .song-panel-item .sp-num {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e94560;
+            min-width: 26px;
+            text-align: center;
+        }
+
+        .song-panel-item.active .sp-num {
+            color: #fff;
+        }
+
+        .song-panel-item .sp-name {
+            font-size: 14px;
+            color: #ccc;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .song-panel-item.active .sp-name {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .song-panel-item .sp-hindi {
+            display: block;
+            font-size: 15px;
+            color: #fff;
+        }
+
+        .song-panel-item .sp-eng {
+            display: block;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .song-panel-item.active .sp-eng {
+            color: #ddd;
+        }
+
+        /* Bottom strip (always news channels) */
+        .bottom-strip {
+            display: flex;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #16213e;
+            border-top: 2px solid #333;
+            overflow-x: auto;
+            align-items: center;
+        }
+
+        .strip-btn {
+            flex-shrink: 0;
+            background: #0f3460;
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: #ccc;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .strip-btn:hover {
+            border-color: #e94560;
+            color: #fff;
+        }
+
+        .strip-btn.active {
+            background: #e94560;
+            border-color: #e94560;
+            color: #fff;
+        }
+
+        .mute-btn {
+            width: 56px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid #e94560;
+            background: #0f3460;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            user-select: none;
+        }
+
+        .mute-btn:hover {
+            background: #e94560;
+        }
+
+        .mute-btn.muted {
+            background: #c0392b;
+            border-color: #c0392b;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #333;
+            border-top-color: #e94560;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== PAGINATION (for artist grid) ===== */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .page-btn {
+            background: #e94560;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 16px 32px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .page-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .page-btn:active {
+            transform: scale(0.95);
+        }
+
+        .page-btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .page-info {
+            font-size: 20px;
+            color: #aaa;
+            min-width: 120px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HOME SCREEN ===== -->
+    <div id="home-screen">
+        <h1>पापा का टीवी</h1>
+        <div class="subtitle">Papa Ka TV - समाचार और गाने / News & Songs</div>
+
+        <!-- News Channels -->
+        <div class="section-title">समाचार चैनल / News Channels</div>
+        <div class="grid" id="news-grid"></div>
+
+        <!-- Songs Button -->
+        <div class="songs-nav-btn" onclick="showArtistScreen()">
+            <span class="hindi-name">&#x266B; गाने सुनें &#x266B;</span>
+            <span class="eng-name">Listen to Songs</span>
+        </div>
+    </div>
+
+    <!-- ===== ARTIST GRID SCREEN ===== -->
+    <div id="artist-screen">
+        <button class="back-home-btn" onclick="showHomeScreen()">&#x2190; वापस जाएँ (Back Home)</button>
+        <h1>गायक चुनें</h1>
+        <div class="subtitle">Choose an Artist</div>
+        <div class="grid" id="artist-grid"></div>
+        <div class="pagination" id="artist-pagination"></div>
+    </div>
+
+    <!-- ===== PLAYER SCREEN ===== -->
+    <div id="player-screen">
+        <div class="top-bar">
+            <button class="back-btn" id="back-btn">&#x2190; वापस (Back)</button>
+            <span class="now-playing" id="now-playing-label"></span>
+        </div>
+        <div class="artist-strip" id="artist-strip"></div>
+        <div class="player-area">
+            <div class="volume-panel">
+                <button class="vol-btn" onclick="volumeUp()" title="Volume Up">+</button>
+                <div class="volume-slider-container">
+                    <input type="range" min="0" max="100" value="70" class="volume-slider" id="volume-slider" oninput="onVolumeSlider(this.value)">
+                </div>
+                <button class="vol-btn" onclick="volumeDown()" title="Volume Down">&minus;</button>
+                <button class="mute-btn" id="mute-btn" onclick="toggleMute()">&#x1F50A;</button>
+                <span class="vol-value" id="vol-display">70</span>
+            </div>
+            <div class="video-container" id="video-container">
+                <div id="yt-player"></div>
+            </div>
+            <div class="song-panel" id="song-panel">
+                <div class="song-panel-title" id="song-panel-title">गाने (Songs)</div>
+                <div id="song-panel-list"></div>
+            </div>
+        </div>
+        <div class="bottom-strip" id="bottom-strip"></div>
+    </div>
+
+    <!-- YouTube IFrame Player API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <script>
+        // =================================================================
+        // NEWS CHANNELS
+        // HOW TO UPDATE: Go to https://www.youtube.com/@HANDLE/live
+        // Copy the video ID from the URL bar and replace videoId below.
+        // =================================================================
+        const channels = [
+            { hindi: 'आज तक', english: 'Aaj Tak', handle: 'AajTak', videoId: 'FkVbroWLQkU', isLive: true, color: '#e74c3c' },
+            { hindi: 'एनडीटीवी इंडिया', english: 'NDTV India', handle: 'NDTVIndia', videoId: 'eTAUXhIQxbc', isLive: true, color: '#3498db' },
+            { hindi: 'एबीपी न्यूज़', english: 'ABP News', handle: 'ABPNews', videoId: 'd8sO4wf9hlM', isLive: true, color: '#e67e22' },
+            { hindi: 'ज़ी न्यूज़', english: 'Zee News', handle: 'ZeeNews', videoId: 'tiqjO0ISADE', isLive: true, color: '#9b59b6' },
+            { hindi: 'इंडिया टीवी', english: 'India TV', handle: 'IndiaTV', videoId: 'Li_m0v0C0cc', isLive: true, color: '#2ecc71' },
+            { hindi: 'रिपब्लिक भारत', english: 'Republic Bharat', handle: 'RepublicWorld', videoId: 'kg1G1tmS6-c', isLive: true, color: '#1abc9c' },
+            { hindi: 'टीवी9 भारतवर्ष', english: 'TV9 Bharatvarsh', handle: 'TV9Bharatvarsh', videoId: 'Ym2-KGKWvAY', isLive: true, color: '#f39c12' },
+            { hindi: 'न्यूज़18 इंडिया', english: 'News18 India', handle: 'News18India', videoId: 'IBRKgs6yi48', isLive: true, color: '#e91e63' }
+        ];
+
+        // =================================================================
+        // ARTISTS & SONGS
+        // First 6 artists have curated songs with individual videoIds.
+        // Remaining artists use YouTube playlist IDs for auto-play.
+        // =================================================================
+        const artists = [
+            // Classic Legends - Singers (Curated Songs)
+            { hindi: 'किशोर कुमार', english: 'Kishore Kumar', color: '#e74c3c', songs: [
+                { hindi: 'पल पल दिल के पास', english: 'Pal Pal Dil Ke Paas', videoId: 'AMuRRXCuy-4' },
+                { hindi: 'मेरे सपनों की रानी', english: 'Mere Sapno Ki Rani', videoId: 'Nw7lcCNSYy8' },
+                { hindi: 'रूप तेरा मस्ताना', english: 'Roop Tera Mastana', videoId: 'smyWxKykPJg' },
+                { hindi: 'कुछ तो लोग कहेंगे', english: 'Kuch Toh Log Kahenge', videoId: 'X6q7BVZXOUU' },
+                { hindi: 'ज़िन्दगी एक सफर है सुहाना', english: 'Zindagi Ek Safar Hai Suhana', videoId: 'GjPGVVebVUc' },
+                { hindi: 'ओ साथी रे', english: 'O Saathi Re', videoId: '0Er6hXcIQ2M' },
+                { hindi: 'ये शाम मस्तानी', english: 'Yeh Shaam Mastani', videoId: 'tNrpDUn9vxI' },
+                { hindi: 'मेरे नैना सावन भादों', english: 'Mere Naina Sawan Bhadon', videoId: '_4Ccxj_A4UU' },
+                { hindi: 'रिमझिम गिरे सावन', english: 'Rim Jhim Gire Sawan', videoId: 'JQoSSJDZxOo' },
+                { hindi: 'फूलों का तारों का', english: 'Phoolon Ka Taron Ka', videoId: 'xpfMlUlEBPU' },
+                { hindi: 'चिंगारी कोई भड़के', english: 'Chingari Koi Bhadke', videoId: '-PwDZUbHpuI' },
+                { hindi: 'ये जो मोहब्बत है', english: 'Yeh Jo Mohabbat Hai', videoId: '9rq50DlsxC4' },
+                { hindi: 'एक लड़की भीगी भागी सी', english: 'Ek Ladki Bheegi Bhaagi Si', videoId: 'GyGydIukxPU' },
+                { hindi: 'मैं शायर तो नहीं', english: 'Main Shayar To Nahin', videoId: 'pDAI7vfjHGo' },
+                { hindi: 'हमें तुमसे प्यार कितना', english: 'Humein Tumse Pyaar Kitna', videoId: 'iTkTrVXwCsA' },
+                { hindi: 'दिल क्या करे', english: 'Dil Kya Kare', videoId: 'iaaBqrQrtUM' },
+                { hindi: 'ॐ शांति ॐ (कर्ज़)', english: 'Om Shanti Om (Karz)', videoId: 'cBqq_3d_tO0' },
+                { hindi: 'चलते चलते मेरे ये गीत', english: 'Chalte Chalte Mere Yeh Geet', videoId: 'xFYJArFBahg' },
+                { hindi: 'हमें और जीने की चाहत न होती', english: 'Hume Aur Jeene Ki Chahat Na Hoti', videoId: 'jQE18bMRv0A' },
+                { hindi: 'आ चल के तुझे मैं लेके चलूँ', english: 'Aa Chal Ke Tujhe Main Leke Chalun', videoId: 'Tf5rQ8t5ngU' }
+            ]},
+            { hindi: 'जगजीत सिंह', english: 'Jagjit Singh', color: '#f39c12', songs: [
+                { hindi: 'तुम इतना जो मुस्कुरा रहे हो', english: 'Tum Itna Jo Muskura Rahe Ho', videoId: 'C8eAKT-zQXk' },
+                { hindi: 'चिट्ठी ना कोई सन्देश', english: 'Chithi Na Koi Sandesh', videoId: 'HbOCFkEdrbI' },
+                { hindi: 'होशवालों को खबर क्या', english: 'Hoshwalon Ko Khabar Kya', videoId: 'hZuwe72Rtcc' },
+                { hindi: 'कोई फरियाद', english: 'Koi Fariyaad', videoId: '8MN2bxMiB9A' },
+                { hindi: 'हज़ारों ख्वाहिशें ऐसी', english: 'Hazaron Khwahishen Aisi', videoId: 'Y3sjcbtr6U0' },
+                { hindi: 'ये दौलत भी ले लो', english: 'Ye Daulat Bhi Le Lo', videoId: '1RH_GN9ffNo' },
+                { hindi: 'वो काग़ज़ की कश्ती', english: 'Woh Kaghaz Ki Kashti', videoId: 'xEdAiJiwkDE' },
+                { hindi: 'प्यार का पहला खत', english: 'Pyar Ka Pehla Khat', videoId: 'f1R8rokg8Lg' },
+                { hindi: 'तुमको देखा तो ये ख्याल आया', english: 'Tum Ko Dekha To Yeh Khayal Aaya', videoId: 'PnH56Koh_TY' },
+                { hindi: 'झुकी झुकी सी नज़र', english: 'Jhuki Jhuki Si Nazar', videoId: 'OmWzdBr1UPw' },
+                { hindi: 'आह को चाहिए एक उम्र', english: 'Aah Ko Chahiye Ek Umr', videoId: 'Qy5y4BgPnRI' },
+                { hindi: 'बात निकलेगी तो फिर', english: 'Baat Niklegi To Phir', videoId: '1MKdWpE_724' },
+                { hindi: 'मैं नशे में हूँ', english: 'Main Nashe Mein Hoon', videoId: 'gGopFU0mynI' },
+                { hindi: 'तुम्हें दिल से चाहा था', english: 'Tumhein Dil Se Chaha Tha', videoId: '_jLOOGwOMhI' },
+                { hindi: 'एक पल में', english: 'Ek Pal Mein', videoId: 'xp7ZE47X3MI' },
+                { hindi: 'मेरी ज़िन्दगी किसी और की', english: 'Meri Zindagi Kisi Aur Ki', videoId: 'yS265UjzlUk' },
+                { hindi: 'गरज बरस', english: 'Garaj Baras', videoId: 'TWGD-KleXic' },
+                { hindi: 'सफ़र में धूप तो होगी', english: 'Safar Mein Dhoop To Hogi', videoId: 'Vj1UuOH-fak' },
+                { hindi: 'होठों से छू लो तुम', english: 'Hoton Se Chhu Lo Tum', videoId: 'X0gB9jcgXxg' },
+                { hindi: 'कोई ये कैसे बताए', english: 'Koi Yeh Kaise Bataye', videoId: 'UyI-VIliCAM' }
+            ]},
+            { hindi: 'लता मंगेशकर', english: 'Lata Mangeshkar', color: '#e91e63', songs: [
+                { hindi: 'लग जा गले', english: 'Lag Ja Gale', videoId: 'vB1qh0eUv78' },
+                { hindi: 'अजीब दास्तां है ये', english: 'Ajeeb Dastan Hai Yeh', videoId: 'l7GR1S-HNGo' },
+                { hindi: 'तुझे देखा तो ये जाना सनम', english: 'Tujhe Dekha To Yeh Jaana Sanam', videoId: 'cNV5hLSa9H8' },
+                { hindi: 'प्यार किया तो डरना क्या', english: 'Pyar Kiya To Darna Kya', videoId: 'm4EYxQsWzVU' },
+                { hindi: 'आपकी नज़रों ने समझा', english: 'Aap Ki Nazron Ne Samjha', videoId: 'Wv-VlQMD0VY' },
+                { hindi: 'बाहों में चले आओ', english: 'Bahon Mein Chale Aao', videoId: 'DBoljd1XtpM' },
+                { hindi: 'तेरे बिना ज़िन्दगी से', english: 'Tere Bina Zindagi Se', videoId: 'hLuXy8yhHYQ' },
+                { hindi: 'एक प्यार का नग़मा है', english: 'Ek Pyar Ka Naghma Hai', videoId: 'qOkE3ekdaco' },
+                { hindi: 'दिल तो है दिल', english: 'Dil To Hai Dil', videoId: 'hVIZbHbUwzY' },
+                { hindi: 'नाम गुम जाएगा', english: 'Naam Gum Jayega', videoId: 'Hziy9jXQ8VQ' },
+                { hindi: 'आज फिर जीने की तमन्ना है', english: 'Aaj Phir Jeene Ki Tamanna Hai', videoId: 'Eylt4Rbq-RA' },
+                { hindi: 'ये गलियाँ ये चौबारा', english: 'Yeh Galiyan Yeh Chaubara', videoId: 'NYRQvppvWO0' },
+                { hindi: 'कभी कभी मेरे दिल में', english: 'Kabhi Kabhi Mere Dil Mein', videoId: '-W2dagktUp0' },
+                { hindi: 'तू जहाँ जहाँ चलेगा (मेरा साया)', english: 'Tu Jahan Jahan Chalega (Mera Saaya)', videoId: 'IB1gg-F0eZY' },
+                { hindi: 'चलते चलते यूँही कोई', english: 'Chalte Chalte Yunhi Koi', videoId: 'vcEEQ-i7Lcs' },
+                { hindi: 'तुम आ गए हो नूर आ गया', english: 'Tum Aa Gaye Ho Noor Aa Gaya', videoId: 'ojd9XQ6Vxyg' },
+                { hindi: 'बिंदिया चमकेगी', english: 'Bindiya Chamkegi', videoId: 'CbZNp3CZrB0' },
+                { hindi: 'सावन का महीना', english: 'Saawan Ka Mahina', videoId: 'YQM8S_y-Xr4' },
+                { hindi: 'आजा रे परदेसी', english: 'Aaja Re Pardesi', videoId: 'Ane1lQtbfvU' },
+                { hindi: 'आएगा आनेवाला', english: 'Aayega Aanewala', videoId: 'e24S6d4e3QA' }
+            ]},
+            { hindi: 'मोहम्मद रफ़ी', english: 'Mohammed Rafi', color: '#3498db', songs: [
+                { hindi: 'क्या हुआ तेरा वादा', english: 'Kya Hua Tera Wada', videoId: 'fyZ-sOHj-Vg' },
+                { hindi: 'बहारों फूल बरसाओ', english: 'Baharon Phool Barsao', videoId: '61pgGMObtdM' },
+                { hindi: 'चौदहवीं का चाँद हो', english: 'Chaudhvin Ka Chand Ho', videoId: 'uAsM_D5oO9c' },
+                { hindi: 'लिखे जो खत तुझे', english: 'Likhe Jo Khat Tujhe', videoId: 'E1xPY3OiuzI' },
+                { hindi: 'तारीफ़ करूँ क्या उसकी', english: 'Taarif Karoon Kya Uski', videoId: 'm3RQGG4fGeU' },
+                { hindi: 'चाँद मेरा दिल चाँदनी हो तुम', english: 'Chand Mera Dil Chandni Ho Tum', videoId: '_FSCznHS9l0' },
+                { hindi: 'बदन पे सितारे', english: 'Badan Pe Sitare', videoId: 'MkABeVCv4lw' },
+                { hindi: 'गुलाबी आँखें जो तेरी देखी', english: 'Gulabi Aankhen Jo Teri Dekhi', videoId: 'Xsn0QjMN3fM' },
+                { hindi: 'चाहूँगा मैं तुझे', english: 'Chahoonga Main Tujhe', videoId: 'dcuvSh6V9gM' },
+                { hindi: 'बार बार दिन ये आए', english: 'Baar Baar Din Ye Aaye', videoId: 'jyCmqsci68s' },
+                { hindi: 'पर्दा है पर्दा', english: 'Parda Hai Parda', videoId: 'WCBkUNedgrk' },
+                { hindi: 'ये दुनिया ये महफ़िल', english: 'Yeh Duniya Yeh Mehfil', videoId: 'r1fd3FAtT8E' },
+                { hindi: 'तेरे मेरे सपने अब एक रंग हैं', english: 'Tere Mere Sapne Ab Ek Rang Hain', videoId: 'kZ3RmxDXZR8' },
+                { hindi: 'आज मौसम बड़ा बेईमान है', english: 'Aaj Mausam Bada Beimaan Hai', videoId: 'fISlzBmyQRg' },
+                { hindi: 'मन रे तू काहे न धीर धरे', english: 'Man Re Tu Kahe Na Dheer Dhare', videoId: 'ES5yOtqQGks' },
+                { hindi: 'ये रेशमी ज़ुल्फ़ें', english: 'Yeh Reshmi Zulfen', videoId: 'Dn4GsnG0Jtc' },
+                { hindi: 'एहसान तेरा होगा मुझ पर', english: 'Ehsan Tera Hoga Mujh Par', videoId: 'FQOGWitvUbw' },
+                { hindi: 'दिल के झरोखे में', english: 'Dil Ke Jharokhe Mein', videoId: 'v9BfZf1x5ZU' },
+                { hindi: 'तुमसे अच्छा कौन है', english: 'Tumse Achha Kaun Hai', videoId: 'YfPSnN4pqpw' },
+                { hindi: 'मधुबन में राधिका नाचे रे', english: 'Madhuban Mein Radhika Nache Re', videoId: '5DfwDvX5gYo' }
+            ]},
+            { hindi: 'मुकेश', english: 'Mukesh', color: '#9b59b6', songs: [
+                { hindi: 'कभी कभी मेरे दिल में (पुरुष)', english: 'Kabhi Kabhi Mere Dil Mein (Male)', videoId: 'BB6KvXQx090' },
+                { hindi: 'सुहाना सफ़र और ये मौसम हसीन', english: 'Suhana Safar Aur Ye Mausam Haseen', videoId: 'QCrjU6FafUk' },
+                { hindi: 'किसी की मुस्कुराहटों पे हो निसार', english: 'Kisi Ki Muskurahaton Pe Ho Nisar', videoId: '69pPYkGiEAQ' },
+                { hindi: 'कहीं दूर जब दिन ढल जाए', english: 'Kahin Door Jab Din Dhal Jaye', videoId: 'ALcunSNj794' },
+                { hindi: 'जीना यहाँ मरना यहाँ', english: 'Jeena Yahan Marna Yahan', videoId: 'e31rwfmp-Zs' },
+                { hindi: 'एक दिन बिक जाएगा माटी के मोल', english: 'Ek Din Bik Jayega Maati Ke Mol', videoId: 'PT4bZKRCdqE' },
+                { hindi: 'जाने कहाँ गए वो दिन', english: 'Jaane Kahaan Gaye Woh Din', videoId: '6hbqHksuQ7I' },
+                { hindi: 'मैं पल दो पल का शायर हूँ', english: 'Main Pal Do Pal Ka Shayar Hoon', videoId: 'QkGqpVYjLUw' },
+                { hindi: 'दिल तड़प तड़प के कह रहा है', english: 'Dil Tadap Tadap Ke Keh Raha Hai', videoId: 'o184v83-gkk' },
+                { hindi: 'आवारा हूँ', english: 'Awara Hoon', videoId: 'QUmlM-Qr_Kc' },
+                { hindi: 'मेरा जूता है जापानी', english: 'Mera Joota Hai Japani', videoId: 'fy7P_Uu3alA' },
+                { hindi: 'दोस्त दोस्त ना रहा', english: 'Dost Dost Na Raha', videoId: 'Y3ucI5rBFFk' },
+                { hindi: 'चाँदी की दीवार ना तोड़ी', english: 'Chandi Ki Deewar Na Todi', videoId: 'dYMTx5wR7o0' },
+                { hindi: 'ये मेरा दीवानापन है', english: 'Yeh Mera Diwanapan Hai', videoId: 'jBxDcoFVdVQ' },
+                { hindi: 'प्यार हुआ इक़रार हुआ', english: 'Pyaar Hua Iqrar Hua', videoId: 'xkl1QwNEuYs' },
+                { hindi: 'दुनिया बनाने वाले', english: 'Duniya Banane Wale', videoId: 'V2npO5E7IBM' },
+                { hindi: 'सबसे बड़ा नादान', english: 'Sabse Bada Naadan', videoId: '_5ecdoOKGpY' },
+                { hindi: 'सब कुछ सीखा हमने', english: 'Sab Kuch Seekha Humne', videoId: 'Td3J6mAwwYU' },
+                { hindi: 'चल री सजनी अब क्या सोचे', english: 'Chal Ri Sajni Ab Kya Soche', videoId: 'XuNp_LY13P4' },
+                { hindi: 'कोई जब तुम्हारा हृदय तोड़ दे', english: 'Koi Jab Tumhara Hriday Tod De', videoId: 'gcjZ9liLM_Y' }
+            ]},
+            { hindi: 'आशा भोसले', english: 'Asha Bhosle', color: '#e67e22', songs: [
+                { hindi: 'दम मारो दम', english: 'Dum Maro Dum', videoId: 'kOrRYDJ4AuY' },
+                { hindi: 'चुरा लिया है तुमने', english: 'Chura Liya Hai Tumne', videoId: 'seFeZOgyFsc' },
+                { hindi: 'पिया तू अब तो आजा', english: 'Piya Tu Ab To Aaja', videoId: 'PrYlUq48hIA' },
+                { hindi: 'इन आँखों की मस्ती', english: 'In Aankhon Ki Masti', videoId: 'PCCmg1tmMQs' },
+                { hindi: 'झुमका गिरा रे', english: 'Jhumka Gira Re', videoId: 'bF88SZUqBKQ' },
+                { hindi: 'रात अकेली है', english: 'Raat Akeli Hai', videoId: 'Su4vvd2thG8' },
+                { hindi: 'दिल चीज़ क्या है', english: 'Dil Cheez Kya Hai', videoId: 'eFcs3p1moMA' },
+                { hindi: 'ओ मेरे सोना रे', english: 'O Mere Sona Re', videoId: 'sITOjxJVY2c' },
+                { hindi: 'आइये मेहरबान', english: 'Aaiye Meherbaan', videoId: 'gex-0maI56E' },
+                { hindi: 'मेरा कुछ सामान', english: 'Mera Kuch Samaan', videoId: 'OlvXDGJAMT0' },
+                { hindi: 'एक हसीना थी', english: 'Ek Haseena Thi', videoId: 'fTgVxro9lbM' },
+                { hindi: 'आज की रात कोई आने को है', english: 'Aaj Ki Raat Koi Aane Ko Hai', videoId: '1_leh5jUeN4' },
+                { hindi: 'निगाहें मिलाने को जी चाहता है', english: 'Nigahen Milane Ko Jee Chahta Hai', videoId: 'S_MUtM85BUA' },
+                { hindi: 'दो लफ़्ज़ों की है दिल की कहानी', english: 'Do Lafzon Ki Hai Dil Ki Kahani', videoId: 'waeAGdCvJd8' },
+                { hindi: 'ये मेरा दिल यार का दीवाना', english: 'Yeh Mera Dil Yaar Ka Diwana', videoId: 'lUFitnpPihs' },
+                { hindi: 'जाने जाँ ढूँढता फिर रहा', english: 'Jaane Jaan Dhoondta Phir Raha', videoId: 'V3tB5Wu2ifg' },
+                { hindi: 'आओ हुज़ूर तुमको', english: 'Aao Huzoor Tumko', videoId: 'zGlGq14lClg' },
+                { hindi: 'पान खाए सैंया हमारो', english: 'Paan Khaye Saiyan Hamaro', videoId: 'K0dycK64DnA' },
+                { hindi: 'मोनिका ओ माय डार्लिंग', english: 'Monica Oh My Darling', videoId: 'lEGOEUyRDiU' },
+                { hindi: 'ये लड़का है अल्लाह', english: 'Yeh Ladka Hai Allah', videoId: 'Q6-x-SInVfc' }
+            ]},
+            { hindi: 'हेमंत कुमार', english: 'Hemant Kumar', color: '#1abc9c', songs: [
+                { hindi: 'बेक़रार करके हमें', english: 'Beqarar Karke Humein', videoId: 'ofjT0GcUijo' },
+                { hindi: 'ज़िन्दगी भर नहीं भूलेगी', english: 'Zindagi Bhar Nahin Bhoolegi', videoId: 'SwasEdyZv-A' },
+                { hindi: 'है अपना दिल तो आवारा', english: 'Hai Apna Dil To Awara', videoId: 'cTfmwD9dVdY' },
+                { hindi: 'ना तुम हमें जानो', english: 'Na Tum Humein Jano', videoId: 'AuF-N8V3JXg' },
+                { hindi: 'तुम पुकार लो', english: 'Tum Pukar Lo', videoId: '9QtjSFnNTmQ' },
+                { hindi: 'ये नयन डरे डरे', english: 'Yeh Nayan Dare Dare', videoId: 'BCDU8nHryaE' },
+                { hindi: 'गंगा आए कहाँ से', english: 'Ganga Aaye Kahan Se', videoId: '7FZ-wrow7R8' },
+                { hindi: 'तुम्ही मेरे मंदिर', english: 'Tumhi Meri Mandir', videoId: 'URrRzFikcD0' },
+                { hindi: 'नींद न मुझको आए', english: 'Neend Na Mujhko Aaye', videoId: 'IwcDwLeXN74' },
+                { hindi: 'ये रात भीगी भीगी', english: 'Yeh Raat Bheegi Bheegi', videoId: 'Kf6VZmPn3zA' },
+                { hindi: 'मन डोले मेरा तन डोले', english: 'Man Dole Mera Tan Dole', videoId: 'EA0mQa7Jz_8' },
+                { hindi: 'वो शाम कुछ अजीब थी', english: 'Woh Shaam Kuch Ajeeb Thi', videoId: 'fRQYAUl38b0' },
+                { hindi: 'जो हमने दास्तां अपनी सुनाई', english: 'Jo Humne Dastaan Apni Sunai', videoId: '-0e9bUfz0SQ' },
+                { hindi: 'जाग दर्दे-इश्क़ जाग', english: 'Jaag Dard-E-Ishq Jaag', videoId: 'ScgSm6X9Zs4' },
+                { hindi: 'मेघा छाए आधी रात', english: 'Megha Chhaye Aadhi Raat', videoId: 'M6tPdC9gU5U' },
+                { hindi: 'ना ये चाँद होगा', english: 'Na Yeh Chand Hoga', videoId: '3tCVtSITWyM' },
+                { hindi: 'किसी की याद में', english: 'Kisi Ki Yaad Mein', videoId: 'BvksIPwjpR8' },
+                { hindi: 'सुख के सब साथी', english: 'Sukh Ke Sab Saathi', videoId: 'uBVbkE0bcWQ' },
+                { hindi: 'तेरे लिए पलकों की', english: 'Tere Liye Palkon Ki', videoId: 'k0NnzaKaHOw' },
+                { hindi: 'ओ बेक़रार दिल', english: 'O Beqarar Dil', videoId: '4ZlbYFEcJrg' }
+            ]},
+            { hindi: 'मन्ना डे', english: 'Manna Dey', color: '#2ecc71', songs: [
+                { hindi: 'प्यार हुआ इक़रार हुआ', english: 'Pyar Hua Iqrar Hua', videoId: 'xkl1QwNEuYs' },
+                { hindi: 'ऐ मेरे ज़ोहरा जबीं', english: 'Ae Mere Zohra Jabeen', videoId: 'Eq-SHc9RMaU' },
+                { hindi: 'लगा चुनरी में दाग', english: 'Laga Chunari Mein Daag', videoId: 'h6lBftmTUp0' },
+                { hindi: 'ज़िन्दगी कैसी है पहेली', english: 'Zindagi Kaisi Hai Paheli', videoId: 'cP44iDZZ_wY' },
+                { hindi: 'तू प्यार का सागर है', english: 'Tu Pyar Ka Sagar Hai', videoId: 'A0vQwBsjCA4' },
+                { hindi: 'एक चतुर नार', english: 'Ek Chatur Naar', videoId: 'lGfTQ-YFjIE' },
+                { hindi: 'पूछो ना कैसे मैंने रैन बिताई', english: 'Puchho Na Kaise Maine Rain Bitayi', videoId: '0vh8_1ruoRo' },
+                { hindi: 'आजा सनम मधुर चाँदनी', english: 'Aaja Sanam Madhur Chandni', videoId: 'vXyIFan2x0Y' },
+                { hindi: 'कसमे वादे प्यार वफ़ा', english: 'Kasme Vaade Pyar Wafa', videoId: 'FsOsr28ZyRg' },
+                { hindi: 'सुर ना सजे', english: 'Sur Na Saje', videoId: '0jGUBOCmB_I' },
+                { hindi: 'ये रात भीगी भीगी', english: 'Yeh Raat Bheegi Bheegi', videoId: 'Kf6VZmPn3zA' },
+                { hindi: 'तू कितनी अच्छी है', english: 'Tu Kitni Achhi Hai', videoId: 'w4qb8JI53F8' },
+                { hindi: 'दिल का हाल सुने दिलवाला', english: 'Dil Ka Haal Sune Dilwala', videoId: 'YtwZAjgo3-c' },
+                { hindi: 'कौन आया मेरे मन के द्वारे', english: 'Kaun Aaya Mere Man Ke Dware', videoId: 'pvuQkL7Igbc' },
+                { hindi: 'चली चली रे पतंग', english: 'Chali Chali Re Patang', videoId: 'yXnaSU790lw' },
+                { hindi: 'ज़िन्दगी ख़्वाब है', english: 'Zindagi Khwab Hai', videoId: 'dyYhXafFq2Y' },
+                { hindi: 'ऐ मेरी ज़ोहरा जबीं', english: 'Aye Meri Zohra Jabeen', videoId: 'Eq-SHc9RMaU' },
+                { hindi: 'कॉफ़ी हाउस से सीधा', english: 'Coffee House Se Seedha', videoId: 'yYKHuW_FS_U' },
+                { hindi: 'लपक झपक तू आ रे बदरवा', english: 'Lapak Jhapak Tu Aa Re Badarwa', videoId: 'UbdBM59A-Y4' },
+                { hindi: 'ये रात ये चाँदनी', english: 'Ye Raat Ye Chandni', videoId: '-6I1JahC6VE' }
+            ]},
+            { hindi: 'तलत महमूद', english: 'Talat Mahmood', color: '#c0392b', songs: [
+                { hindi: 'जलते हैं जिसके लिए', english: 'Jalte Hain Jiske Liye', videoId: 'BHU1tKl-mM0' },
+                { hindi: 'फिर वही शाम', english: 'Phir Wohi Shaam', videoId: 'LUnx-zw6LPU' },
+                { hindi: 'ऐ मेरे दिल कहीं और चल', english: 'Ae Mere Dil Kahin Aur Chal', videoId: '1B9sm1HHAlQ' },
+                { hindi: 'सब कुछ लुटा के होश में', english: 'Sab Kuchh Luta Ke Hosh Mein', videoId: 'Ix5drLCN9lw' },
+                { hindi: 'इतना ना मुझसे तू प्यार बढ़ा', english: 'Itna Na Mujhse Tu Pyar Badha', videoId: 'iZUcBGRoLqo' },
+                { hindi: 'हैं सबसे मधुर वो गीत', english: 'Hain Sabse Madhur Woh Geet', videoId: 'XagIs_0zgaY' },
+                { hindi: 'जाएँ तो जाएँ कहाँ', english: 'Jayen To Jayen Kahan', videoId: 'WyR72y5qTgM' },
+                { hindi: 'शाम-ए-ग़म की क़सम', english: 'Shaam-E-Gham Ki Kasam', videoId: '5FdB0k_91mc' },
+                { hindi: 'तस्वीर तेरी दिल में', english: 'Tasveer Teri Dil Mein', videoId: 'D5P2iJh-Lqk' },
+                { hindi: 'मेरा यार बना है दूल्हा', english: 'Mera Yaar Bana Hai Dulha', videoId: 'trJKYnBtvks' },
+                { hindi: 'दिल-ए-नादाँ तुझे हुआ क्या है', english: 'Dil-E-Nadan Tujhe Hua Kya Hai', videoId: 'I8oT8_l5NfE' },
+                { hindi: 'राही मतवाले', english: 'Rahi Matwale', videoId: 'ehm7Gqk2e8s' },
+                { hindi: 'आँसू समेट लो', english: 'Aansoo Samet Lo', videoId: 'shQyWPVYTFg' },
+                { hindi: 'तेरी दुनिया से दूर', english: 'Teri Duniya Se Door', videoId: 'kYpjWksjj8Q' },
+                { hindi: 'ज़िन्दगी देने वाले सुन', english: 'Zindagi Dene Wale Sun', videoId: 'W41jIwH4k9g' },
+                { hindi: 'दिल में समाके रहे', english: 'Dil Mein Samaake Rahe', videoId: 'dG4pJ_9uuHA' },
+                { hindi: 'ये हवा ये रात ये चाँदनी', english: 'Yeh Hawa Yeh Raat Yeh Chandni', videoId: 'cP1bg63aZlc' },
+                { hindi: 'हाल-ए-दिल मेरा', english: 'Haal-E-Dil Mera', videoId: 'ynCoLLNEnRE' },
+                { hindi: 'मंज़िल से निकला', english: 'Manzil Se Nikla', videoId: 'z-RJc77JIKE' },
+                { hindi: 'ये दिल की बात', english: 'Yeh Dil Ki Baat', videoId: 'poXBa76JNKk' }
+            ]},
+            { hindi: 'गीता दत्त', english: 'Geeta Dutt', color: '#8e44ad', songs: [
+                { hindi: 'बाबूजी धीरे चलना', english: 'Babuji Dheere Chalna', videoId: '887yPlDwYik' },
+                { hindi: 'ठंडी हवाएँ', english: 'Thandi Hawayein', videoId: 'bTmYReTJkmU' },
+                { hindi: 'ऐ दिल मुझे बता दे', english: 'Ae Dil Mujhe Bata De', videoId: 'CncrRYmMSi4' },
+                { hindi: 'वक़्त ने किया', english: 'Waqt Ne Kiya', videoId: 'w1Jf9PM7mpA' },
+                { hindi: 'जाता कहाँ है दीवाने', english: 'Jaata Kahan Hai Deewane', videoId: 'ufDcdRBrOZE' },
+                { hindi: 'हम आपकी आँखों में', english: 'Hum Aap Ki Ankhon Mein', videoId: '6DJxr_GOiHc' },
+                { hindi: 'ना जाओ सैयाँ', english: 'Na Jao Saiyan', videoId: 'xLznQgFcZfE' },
+                { hindi: 'जाने क्या तूने कही', english: 'Jane Kya Tune Kahi', videoId: 'xRBa4C4ojZg' },
+                { hindi: 'मेरा सुन्दर सपना बीत गया', english: 'Mera Sundar Sapna Beet Gaya', videoId: 'XfAagdgVkDc' },
+                { hindi: 'तदबीर से बिगड़ी हुई', english: 'Tadbeer Se Bigdi Hui', videoId: 'Qtgyb6zdheI' },
+                { hindi: 'नन्ही कली सोने चली', english: 'Nanhi Kali Sone Chali', videoId: 'OqMYJoAX0L4' },
+                { hindi: 'बाज़ी लगाए अपनी जवानी', english: 'Baazi Lagaye Apni Jawani', videoId: 'cgwfvDh7cPc' },
+                { hindi: 'ठंडी हवा काली घटा', english: 'Thandi Hawa Kali Ghata', videoId: 'y32hUB9X940' },
+                { hindi: 'ये लो मैं हारी पिया', english: 'Yeh Lo Main Hari Piya', videoId: 'ulB7iSrfhcg' },
+                { hindi: 'हवा में उड़ता जाए', english: 'Hawa Mein Udta Jaaye', videoId: 'OyDr1zTy7Ek' },
+                { hindi: 'ऐ दिल है मुश्किल जीना', english: 'Ae Dil Hai Mushkil Jeena', videoId: 'gQgguMKy5is' },
+                { hindi: 'मेरी जान मेरी जान', english: 'Meri Jaan Meri Jaan', videoId: 'EPxp4PSGoNI' },
+                { hindi: 'पिघला है सोने सा रंग', english: 'Pighla Hai Sone Sa Rang', videoId: '2xyr2AxNKcY' },
+                { hindi: 'मेरी जान सण्डे के सण्डे', english: 'Meri Jaan Sunday Ke Sunday', videoId: 'NjMwcSL7C5A' },
+                { hindi: 'सर जो तेरा चकराए', english: 'Sar Jo Tera Chakraye', videoId: '9eXFwBLM5x8' }
+            ]},
+
+            // 90s Legends
+            { hindi: 'कुमार सानू', english: 'Kumar Sanu', color: '#d35400', songs: [
+                { hindi: 'एक लड़की को देखा', english: 'Ek Ladki Ko Dekha', videoId: 'aPQ0AMgOvqo' },
+                { hindi: 'धीरे धीरे से मेरी ज़िन्दगी', english: 'Dheere Dheere Se Meri Zindagi', videoId: 'Mcs2xEZ6K8o' },
+                { hindi: 'जादू तेरी नज़र', english: 'Jaadu Teri Nazar', videoId: 'FD3vgLOEdgk' },
+                { hindi: 'मेरा दिल भी कितना पागल है', english: 'Mera Dil Bhi Kitna Pagal Hai', videoId: 'MayiMDBdtI0' },
+                { hindi: 'आँखों में तेरी', english: 'Aankhon Mein Teri', videoId: 'F4mhmRFFAjQ' },
+                { hindi: 'नज़र के सामने', english: 'Nazar Ke Saamne', videoId: 'A4_KJ8t-dbo' },
+                { hindi: 'दो दिल मिल रहे हैं', english: 'Do Dil Mil Rahe Hain', videoId: 'dReDtHKF0-g' },
+                { hindi: 'ये काली काली आँखें', english: 'Yeh Kaali Kaali Aankhein', videoId: 'oA3U9mv9yBw' },
+                { hindi: 'लड़की बड़ी अंजानी है', english: 'Ladki Badi Anjani Hai', videoId: 'oJcE_QPFAng' },
+                { hindi: 'बाज़ीगर ओ बाज़ीगर', english: 'Baazigar O Baazigar', videoId: 'NImKUbUFny8' },
+                { hindi: 'चुरा के दिल मेरा', english: 'Chura Ke Dil Mera', videoId: 'u79aLbPyd_0' },
+                { hindi: 'ये दुआ है मेरी रब से', english: 'Ye Dua Hai Meri Rab Se', videoId: '3jt6JcmfIGU' },
+                { hindi: 'मैं दुनिया भुला दूँगा', english: 'Main Duniya Bhula Dunga', videoId: 'lmZVoOlzbxw' },
+                { hindi: 'सोचेंगे तुम्हें प्यार', english: 'Sochenge Tumhe Pyar', videoId: 'lFdSi01tpYM' },
+                { hindi: 'तू मिले दिल खिले', english: 'Tu Mile Dil Khile', videoId: 'e7h3Rlcl9a8' },
+                { hindi: 'साँसों की ज़रूरत है जैसे', english: 'Saanson Ki Zaroorat Hai Jaise', videoId: 'YCuhzjK11iA' },
+                { hindi: 'कितनी बेचैन होके', english: 'Kitni Bechain Hoke', videoId: '0JCLpa-r4Lg' },
+                { hindi: 'तुझे देखा तो ये जाना सनम', english: 'Tujhe Dekha To Ye Jaana Sanam', videoId: 'cNV5hLSa9H8' },
+                { hindi: 'दिल ने ये कहा है दिल से', english: 'Dil Ne Yeh Kaha Hai Dil Se', videoId: 'ze9EhyeE9-4' },
+                { hindi: 'जब कोई बात बिगड़ जाए', english: 'Jab Koi Baat Bigad Jaye', videoId: 'mNSYPtzpfd4' }
+            ]},
+            { hindi: 'उदित नारायण', english: 'Udit Narayan', color: '#27ae60', songs: [
+                { hindi: 'पहला नशा', english: 'Pehla Nasha', videoId: 'Ki41AKu0iHc' },
+                { hindi: 'मेहंदी लगा के रखना', english: 'Mehndi Laga Ke Rakhna', videoId: 'pLVyyGEQ0Uk' },
+                { hindi: 'पापा कहते हैं', english: 'Papa Kehte Hain', videoId: 'E8ytXrzkTNs' },
+                { hindi: 'कुछ कुछ होता है', english: 'Kuch Kuch Hota Hai', videoId: 'bKZTnnFU9HA' },
+                { hindi: 'ऐ मेरे हमसफ़र', english: 'Ae Mere Humsafar', videoId: 'ipGUPjNVqXk' },
+                { hindi: 'हो गया है तुझको तो', english: 'Ho Gaya Hai Tujhko To', videoId: 'M_bBw50pRII' },
+                { hindi: 'परदेसी परदेसी', english: 'Pardesi Pardesi', videoId: 'xKb6lP3JxrA' },
+                { hindi: 'मैं यहाँ हूँ', english: 'Main Yahaan Hoon', videoId: 'm6Y8xEfyXTs' },
+                { hindi: 'राधा कैसे ना जले', english: 'Radha Kaise Na Jale', videoId: 'OTaYCjy9vXg' },
+                { hindi: 'साजनजी घर आए', english: 'Saajanji Ghar Aaye', videoId: '8XtXLVylOoU' },
+                { hindi: 'ये हसीन वादियाँ', english: 'Yeh Haseen Vadiyan', videoId: 'pYDbGCEUN40' },
+                { hindi: 'चाँद छुपा बादल में', english: 'Chand Chhupa Badal Mein', videoId: '9a6UaCBEV6o' },
+                { hindi: 'तेरी ओर', english: 'Teri Ore', videoId: 'CWfCp96-yck' },
+                { hindi: 'कोई मिल गया', english: 'Koi Mil Gaya', videoId: 'IuS2d8bobgw' },
+                { hindi: 'टिप टिप बरसा पानी', english: 'Tip Tip Barsa Paani', videoId: 'BtlnpBb4O8E' },
+                { hindi: 'जादू है नशा है', english: 'Jaadu Hai Nasha Hai', videoId: 'gTSL0Rv0am4' },
+                { hindi: 'मुझे हक़ है', english: 'Mujhe Haq Hai', videoId: '1WI_ybqZ9cc' },
+                { hindi: 'रुकी रुकी सी ज़िन्दगी', english: 'Ruki Ruki Si Zindagi', videoId: 'J--oD_NDwGQ' },
+                { hindi: 'मेरे ख़्वाबों में जो आये', english: 'Mere Khwabon Mein Jo Aaye', videoId: 'g5ZeZQbBDx4' },
+                { hindi: 'संदेसे आते हैं', english: 'Sandese Aate Hain', videoId: 'yccGxvIydKg' }
+            ]},
+            { hindi: 'अल्का याग्निक', english: 'Alka Yagnik', color: '#e74c3c', songs: [
+                { hindi: 'बोले चूड़ियाँ', english: 'Bole Chudiyan', videoId: 'KpuTKyfGM5w' },
+                { hindi: 'एक दो तीन', english: 'Ek Do Teen', videoId: 'f1QOw1WdLtA' },
+                { hindi: 'धक धक करने लगा', english: 'Dhak Dhak Karne Laga', videoId: 'NrVPXPzrsJM' },
+                { hindi: 'चोली के पीछे', english: 'Choli Ke Peeche Kya Hai', videoId: '3OXiqmUhB70' },
+                { hindi: 'ताल से ताल मिला', english: 'Taal Se Taal Mila', videoId: 'OinGHNpnGtc' },
+                { hindi: 'दिल तो पागल है', english: 'Dil To Pagal Hai', videoId: 'wPQgy7h5K9M' },
+                { hindi: 'तू चीज़ बड़ी है मस्त', english: 'Tu Cheez Badi Hai Mast', videoId: 'PufJm6BV8g4' },
+                { hindi: 'ये बंधन तो', english: 'Yeh Bandhan To', videoId: '9JYT_dyGW7k' },
+                { hindi: 'घूँघट में चांदा है', english: 'Ghunghte Mein Chanda Hai', videoId: '5aGdSAuRM7A' },
+                { hindi: 'तेरी बिंदिया रे', english: 'Teri Bindiya Re', videoId: 'uf95uvIRTjI' },
+                { hindi: 'लड़की बड़ी अंजानी है', english: 'Ladki Badi Anjani Hai', videoId: 'oJcE_QPFAng' },
+                { hindi: 'मेरी बन्नो की आएगी बारात', english: 'Meri Banno Ki Aayegi Baraat', videoId: 'OYDuv7671-I' },
+                { hindi: 'कुछ कुछ होता है', english: 'Kuch Kuch Hota Hai', videoId: 'bKZTnnFU9HA' },
+                { hindi: 'चाँद छुपा बादल में', english: 'Chand Chhupa Badal Mein', videoId: '9a6UaCBEV6o' },
+                { hindi: 'हाय अगर कोई', english: 'Haye Agar Koi', videoId: 'e6zh_YKS8Dg' },
+                { hindi: 'तुझे देखा तो ये जाना सनम', english: 'Tujhe Dekha To Ye Jaana Sanam', videoId: 'cNV5hLSa9H8' },
+                { hindi: 'दीदी तेरा देवर दीवाना', english: 'Didi Tera Devar Deewana', videoId: 'YuBv3Qbo_hE' },
+                { hindi: 'टिप टिप बरसा पानी', english: 'Tip Tip Barsa Pani', videoId: 'BtlnpBb4O8E' },
+                { hindi: 'अगर तुम साथ हो', english: 'Agar Tum Saath Ho', videoId: 'sK7riqg2mr4' },
+                { hindi: 'काजल काजल', english: 'Kajol Kajol', videoId: '3462nGSSHnE' }
+            ]},
+            { hindi: 'कविता कृष्णमूर्ति', english: 'Kavita Krishnamurthy', color: '#f1c40f', songs: [
+                { hindi: 'हवा हवाई', english: 'Hawa Hawai', videoId: '-8QTG6c6GLk' },
+                { hindi: 'धक धक करने लगा', english: 'Dhak Dhak Karne Laga', videoId: 'NrVPXPzrsJM' },
+                { hindi: 'मेरे ख़्वाबों में', english: 'Mere Khwabon Mein', videoId: 'RLm5CsFHJKc' },
+                { hindi: 'प्यार हुआ चुपके से', english: 'Pyar Hua Chupke Se', videoId: '0Vm39V_sOsQ' },
+                { hindi: 'सात समुन्दर', english: 'Saat Samundar', videoId: 'SuQKUY_QMrY' },
+                { hindi: 'निम्बूदा निम्बूदा', english: 'Nimbooda Nimbooda', videoId: 'yCtjwYe3k_E' },
+                { hindi: 'आँख मारे', english: 'Aankh Maare', videoId: '0h7PM11RKBU' },
+                { hindi: 'बड़े मियाँ छोटे मियाँ', english: 'Bade Miyan Chhote Miyan', videoId: 'dFrL5WpOWUM' },
+                { hindi: 'भोली सी सूरत', english: 'Bholi Si Surat', videoId: '-1J1XqOKnuw' },
+                { hindi: 'हमको आजकल है', english: 'Humko Aajkal Hai', videoId: 'Kzwc9_hyWhA' },
+                { hindi: 'तू चीज़ बड़ी है मस्त मस्त', english: 'Tu Cheez Badi Hai Mast Mast', videoId: 'PufJm6BV8g4' },
+                { hindi: 'आज मैं ऊपर', english: 'Aaj Main Upar', videoId: 'cBhehE8AbUA' },
+                { hindi: 'ये चाँद सा रोशन चेहरा', english: 'Yeh Chand Sa Roshan Chehra', videoId: 'OZ4YnZ3kDe4' },
+                { hindi: 'मेरा पिया घर आया', english: 'Mera Piya Ghar Aaya', videoId: '75kdD3su54g' },
+                { hindi: 'के सेरा सेरा', english: 'Ke Sera Sera', videoId: 'Qh6WtwfMPdQ' },
+                { hindi: 'अब तेरे बिन', english: 'Ab Tere Bin', videoId: 'rXHY4Cv9cA8' },
+                { hindi: 'दिल का क्या कसूर', english: 'Dil Ka Kya Kasoor', videoId: 'LQiOA7euaYA' },
+                { hindi: 'मेरी बन्नो की आएगी बारात', english: 'Meri Banno Ki Aayegi Baraat', videoId: 'OYDuv7671-I' },
+                { hindi: 'आरे बाबा हमें', english: 'Arre Baba Humein', videoId: 'WCWtlH4RqY8' },
+                { hindi: 'मैं हूँ ख़ुशरंग', english: 'Main Hoon Khush Rang', videoId: 'PF2WVBJYYWA' }
+            ]},
+            { hindi: 'अमित कुमार', english: 'Amit Kumar', color: '#16a085', songs: [
+                { hindi: 'यार बिना चैन कहाँ रे', english: 'Yaar Bina Chain Kahan Re', videoId: 'yVImQoGNdTE' },
+                { hindi: 'रोते हुए आते हैं सब', english: 'Rote Hue Aate Hain Sab', videoId: 'IwCMSecW_tM' },
+                { hindi: 'हवा हवा ए हवा', english: 'Hawa Hawa E Hawa', videoId: 'X8t8axbZnH8' },
+                { hindi: 'बड़े अच्छे लगते हैं', english: 'Bade Acche Lagte Hain', videoId: 'p5EeJ9bHAOI' },
+                { hindi: 'मैं तेरा आशिक़ हूँ', english: 'Main Tera Aashiq Hoon', videoId: 'pa6N4tvzPP4' },
+                { hindi: 'तेरी बाहों में', english: 'Teri Baahon Mein', videoId: 'uEA0ZrwMv7w' },
+                { hindi: 'दे दे प्यार दे', english: 'De De Pyar De', videoId: 'ztLjAiErnFc' },
+                { hindi: 'मंज़िलें अपनी जगह हैं', english: 'Manzilein Apni Jagah Hain', videoId: '0-CZJ-aZGcY' },
+                { hindi: 'क्या यही प्यार है', english: 'Kya Yahi Pyar Hai', videoId: 'L5cQa_QIjBA' },
+                { hindi: 'हमें और जीने की', english: 'Humein Aur Jeene Ki', videoId: 'jQE18bMRv0A' },
+                { hindi: 'ये वादा रहा', english: 'Yeh Vaada Raha', videoId: 'bLxLaVS4ZXQ' },
+                { hindi: 'किसी नज़र को तेरा इंतेज़ार', english: 'Kisi Nazar Ko Tera Intezar', videoId: 'J6VXs94ODt8' },
+                { hindi: 'ना बोले तुम ना मैंने', english: 'Na Bole Tum Na Maine', videoId: '5DGcJBFnHHQ' },
+                { hindi: 'तुमसे मिलके दिल का', english: 'Tum Se Milke Dil Ka', videoId: 'rIujePFpuCU' },
+                { hindi: 'नहीं नहीं अभी नहीं', english: 'Nahi Nahi Abhi Nahi', videoId: 'hnc4OGz1LtY' },
+                { hindi: 'आज रपट जाए', english: 'Aaj Rapat Jaye', videoId: 'WpxcUsLevfs' },
+                { hindi: 'राजा को रानी से प्यार', english: 'Raja Ko Rani Se Pyar', videoId: 'aA6o96wkEt0' },
+                { hindi: 'लोग कहते हैं मैं शराब पीता हूँ', english: 'Log Kehte Hain Main Sharab', videoId: 'S49wqVih7c8' },
+                { hindi: 'कहाँ के कितना लोनली है', english: 'Kaha Ke Kitna Lonely Hai', videoId: '9WKgBLdbzUk' },
+                { hindi: 'ना तुम जानो ना हम', english: 'Na Tum Jaano Na Hum', videoId: '6z3-AkDQvOw' }
+            ]},
+            { hindi: 'महेंद्र कपूर', english: 'Mahendra Kapoor', color: '#2980b9', songs: [
+                { hindi: 'मेरे देश की धरती', english: 'Mere Desh Ki Dharti', videoId: 'F5GPstAAuSM' },
+                { hindi: 'चलो एक बार फिर से', english: 'Chalo Ek Baar Phir Se', videoId: 'nSC3SXmM0O4' },
+                { hindi: 'नीले गगन के तले', english: 'Neele Gagan Ke Tale', videoId: 'lbYuj6wkp7o' },
+                { hindi: 'ये देश है वीर जवानों का', english: 'Ye Desh Hai Veer Jawanon Ka', videoId: 'GUPbBykMZfA' },
+                { hindi: 'तुम्ही हो मेरे मंदिर', english: 'Tumhi Ho Meri Mandir', videoId: 'URrRzFikcD0' },
+                { hindi: 'होके मजबूर मुझे', english: 'Hoke Majboor Mujhe', videoId: 'dSfa_qlJrL8' },
+                { hindi: 'आज मौसम बड़ा बेईमान है', english: 'Aaj Mausam Bada Beimaan Hai', videoId: 'fISlzBmyQRg' },
+                { hindi: 'प्यार के मोड़ पे', english: 'Pyar Ke Mod Pe', videoId: 'SnshSqqzwRM' },
+                { hindi: 'तेरा मेरा साथ रहे', english: 'Tera Mera Saath Rahe', videoId: '44ZFwSyUPDM' },
+                { hindi: 'आदमी मुसाफ़िर है', english: 'Aadmi Musafir Hai', videoId: 'xVoOqVNIhgw' },
+                { hindi: 'आज पुरानी राहों से', english: 'Aaj Purani Rahon Se', videoId: 'E7VSfOHIVqA' },
+                { hindi: 'दूर का राही', english: 'Door Ka Rahi', videoId: 'Zlb1-OQd7dI' },
+                { hindi: 'नन्हा मुन्ना राही हूँ', english: 'Nanha Munna Rahi Hoon', videoId: 'WRRaDW78bng' },
+                { hindi: 'महाभारत टाइटल सॉन्ग', english: 'Mahabharat Title Song', videoId: 'N_Qxm-UY1HY' },
+                { hindi: 'साथी हाथ बढ़ाना', english: 'Saathi Haath Badhana', videoId: 'rZbq9wRvaXM' },
+                { hindi: 'नील कमल के', english: 'Neel Kamal Ke', videoId: 'b_GSlOuTeXQ' },
+                { hindi: 'वो शाम कुछ अजीब', english: 'Woh Sham Kuch Ajeeb', videoId: 'fRQYAUl38b0' },
+                { hindi: 'ओ मेरे सोना रे', english: 'O Mere Sona Re', videoId: 'sITOjxJVY2c' },
+                { hindi: 'हम जब होंगे साठ साल के', english: 'Hum Jab Honge Saath Saal Ke', videoId: '34LrrTztKMs' },
+                { hindi: 'चलो एक बार फिर से', english: 'Chalo Ek Baar Phir Se Ajnabi', videoId: 'nSC3SXmM0O4' }
+            ]},
+
+            // Ghazal Maestros
+            { hindi: 'पंकज उधास', english: 'Pankaj Udhas', color: '#8e44ad', songs: [
+                { hindi: 'चिट्ठी आई है', english: 'Chitthi Aayi Hai', videoId: 'S6Mk-hY-vjw' },
+                { hindi: 'और आहिस्ता कीजिए बातें', english: 'Aur Ahista Kijiye Baatein', videoId: '4eFNeWMjdaM' },
+                { hindi: 'ना कजरे की धार', english: 'Na Kajre Ki Dhar', videoId: 'ExMcsBnnnR8' },
+                { hindi: 'जिए तो जिए कैसे', english: 'Jiye To Jiye Kaise', videoId: 'wYdXuNtJkPk' },
+                { hindi: 'चाँदी जैसा रंग है तेरा', english: 'Chandi Jaisa Rang Hai Tera', videoId: '6UiwXthbtZs' },
+                { hindi: 'थोड़ी थोड़ी पिया करो', english: 'Thodi Thodi Piya Karo', videoId: 'p4PUWnuPCkI' },
+                { hindi: 'सबको मालूम है मैं शराबी नहीं', english: 'Sabko Maloom Hai Main Sharabi Nahin', videoId: 'euNZkgTtK1Y' },
+                { hindi: 'मुखड़ा देख ले', english: 'Mukhda Dekh Le', videoId: 'MeSZxG5pLmg' },
+                { hindi: 'आप जिनके क़रीब होते हैं', english: 'Aap Jinke Kareeb Hote Hain', videoId: 'do4Qh5z10BI' },
+                { hindi: 'हसरत है कि आएँ', english: 'Hasrat Hai Ke Aayen', videoId: 'lXLnxTa9DnQ' },
+                { hindi: 'चुपके चुपके रात दिन', english: 'Chupke Chupke Raat Din', videoId: 'MWjaK_nW72E' },
+                { hindi: 'आशिक़ी में हर आशिक़', english: 'Aashiqui Mein Har Aashiq', videoId: 'L85rSpXikXs' },
+                { hindi: 'घूँघट में चाँद होगा', english: 'Ghunghat Mein Chaand Hoga', videoId: '6iVqikzTqQM' },
+                { hindi: 'इन नज़रों से', english: 'In Nazar Se', videoId: 'NcJD-XpsiFQ' },
+                { hindi: 'मुझे तुमसे मोहब्बत है', english: 'Mujhe Tumse Mohabbat Hai', videoId: 'Qy3C_b1Kvck' },
+                { hindi: 'आप को देख कर', english: 'Aap Ko Dekh Kar', videoId: '5UlQuASO7Tw' },
+                { hindi: 'पागल दिल', english: 'Pagal Dil', videoId: '4eFNeWMjdaM' },
+                { hindi: 'कहीं दूर से', english: 'Kahin Door Se', videoId: '9umE4vu-ros' },
+                { hindi: 'साथी मेरे साथी', english: 'Saathi Mere Saathi', videoId: '_iTQ682Hn98' },
+                { hindi: 'मैं फिर भी तुमको चाहूँगा', english: 'Main Phir Bhi Tumko Chahunga', videoId: '6-ZYY1pudI0' }
+            ]},
+            { hindi: 'अनूप जलोटा', english: 'Anup Jalota', color: '#d4ac0d', songs: [
+                { hindi: 'ऐसी लागी लगन', english: 'Aisi Laagi Lagan', videoId: 'a-HaUyDP0Ko' },
+                { hindi: 'तूने मुझे बुलाया शेरांवालिये', english: 'Tune Mujhe Bulaya Sherawaliye', videoId: '0TOwPLQYmvg' },
+                { hindi: 'मैं नीर भरी', english: 'Main Neer Bhari', videoId: 'P5ZOwMSejaI' },
+                { hindi: 'ॐ जय जगदीश हरे', english: 'Om Jai Jagdish Hare', videoId: 'g_jQp2agTks' },
+                { hindi: 'इतनी शक्ति हमें देना', english: 'Itni Shakti Hame Dena', videoId: '63cHBXmH0AE' },
+                { hindi: 'रंग दे चुनरिया', english: 'Rang De Chunariya', videoId: 'BAOLNePEl4o' },
+                { hindi: 'चदरिया झीनी रे झीनी', english: 'Chadariya Jhini Re Jhini', videoId: 'Jg4qdhVyezs' },
+                { hindi: 'जो भजे हरि को सदा', english: 'Jo Bhaje Hari Ko Sada', videoId: 'EqlYN2hHYtY' },
+                { hindi: 'गोविन्द बोलो हरि गोपाल बोलो', english: 'Govind Bolo Hari Gopal Bolo', videoId: 'i8syGaFkvEI' },
+                { hindi: 'राम से बड़ा राम का नाम', english: 'Ram Se Bada Ram Ka Naam', videoId: 'wptN94S78FM' },
+                { hindi: 'रघुपति राघव राजा राम', english: 'Raghupati Raghav Raja Ram', videoId: '4QVe9SzkVfg' },
+                { hindi: 'मैं आया हूँ तेरी शरण में', english: 'Main Aaya Hoon Teri Sharan Mein', videoId: 'gg1iqYlD0d4' },
+                { hindi: 'अच्युतम केशवम', english: 'Achyutam Keshavam', videoId: '_SAVN1z0QdA' },
+                { hindi: 'हनुमान चालीसा', english: 'Hanuman Chalisa', videoId: 'HLkPxQTPxpw' },
+                { hindi: 'हरि ॐ तत सत', english: 'Hari Om Tat Sat', videoId: '94fRgrM73-0' },
+                { hindi: 'पायो जी मैंने राम रतन धन पायो', english: 'Payoji Maine Ram Ratan Dhan Payo', videoId: 'T5fHSDEr4mU' },
+                { hindi: 'भजन बिना चैन ना आवे', english: 'Bhajan Bina Chain Na Aave', videoId: 'AsPpQGjvx7g' },
+                { hindi: 'मन लागो यार फ़क़ीरी में', english: 'Man Lago Yaar Fakiri Mein', videoId: 'waStV92Qr4c' },
+                { hindi: 'हे राम हे राम', english: 'Hey Ram Hey Ram', videoId: 'oiG8i-hyU3A' },
+                { hindi: 'ताजदार-ए-हरम', english: 'Tajdar-E-Haram', videoId: 'FDvAWRCITK4' }
+            ]},
+            { hindi: 'ग़ुलाम अली', english: 'Ghulam Ali', color: '#1abc9c', songs: [
+                { hindi: 'चुपके चुपके रात दिन', english: 'Chupke Chupke Raat Din', videoId: 'MWjaK_nW72E' },
+                { hindi: 'हंगामा है क्यों बरपा', english: 'Hungama Hai Kyon Barpa', videoId: 'xQsMn1kmJs4' },
+                { hindi: 'आवारगी', english: 'Awargi', videoId: 'pZWqn3BC17Q' },
+                { hindi: 'रंजिश ही सही', english: 'Ranjish Hi Sahi', videoId: 'Xc6uwbXpmUY' },
+                { hindi: 'ये दिल ये पागल दिल मेरा', english: 'Ye Dil Ye Pagal Dil Mera', videoId: 'pZWqn3BC17Q' },
+                { hindi: 'इतनी मुद्दत बाद मिले हो', english: 'Itni Muddat Baad Mile Ho', videoId: 'g6FGBXvIlsg' },
+                { hindi: 'फ़ासले से भी ज़्यादा', english: 'Fasle Se Bhi Jyada', videoId: 'HYaV4pa5oMQ' },
+                { hindi: 'दिल में एक लहर सी उठी', english: 'Dil Mein Ek Lehar Si Uthi', videoId: 'tfRCEjrhNyw' },
+                { hindi: 'राज़ की बात कह दूँ', english: 'Raaz Ki Baat Keh Doon', videoId: 'gP2-Gs2bK7U' },
+                { hindi: 'हर तरफ़ हर जगह', english: 'Har Taraf Har Jagah', videoId: 'C0HB4TJnK70' },
+                { hindi: 'अपनी धुन में रहता हूँ', english: 'Apni Dhun Mein Rehta Hoon', videoId: 'i7W1hhnFZnw' },
+                { hindi: 'दिल के अरमान', english: 'Dil Ke Armaan', videoId: '6wr5QM4OEf0' },
+                { hindi: 'तेरा बयान ग़ालिब', english: 'Tera Bayaan Ghalib', videoId: 'bG277voVL_c' },
+                { hindi: 'बस एक ज़रा सी बात', english: 'Bas Ek Zara Si Baat', videoId: 'nxYtMmizS34' },
+                { hindi: 'पत्ता पत्ता बूटा बूटा', english: 'Patta Patta Boota Boota', videoId: 'qBvj5mdnlFs' },
+                { hindi: 'लोग औरों के', english: 'Log Auron Ke', videoId: 'MWjaK_nW72E' },
+                { hindi: 'कोई उम्मीद बर नहीं आती', english: 'Koi Umeed Bar Nahin Aati', videoId: '40G9d5LBdUU' },
+                { hindi: 'रेख़्ते में', english: 'Rekhtey Mein', videoId: '1dqCcxW8UGk' },
+                { hindi: 'दिल की बात', english: 'Dil Ki Baat', videoId: 'HJDdAX2LgPc' },
+                { hindi: 'ये ग़ज़ल नहीं आसाँ', english: 'Ye Ghazal Nahin Aasaan', videoId: 'Urqu5GeceOY' }
+            ]},
+            { hindi: 'मेहदी हसन', english: 'Mehdi Hassan', color: '#c0392b', songs: [
+                { hindi: 'रंजिश ही सही', english: 'Ranjish Hi Sahi', videoId: 'Xc6uwbXpmUY' },
+                { hindi: 'गुलों में रंग भरे', english: 'Gulon Mein Rang Bhare', videoId: 'Ds8nabK0vE8' },
+                { hindi: 'ज़िन्दगी में तो सभी', english: 'Zindagi Mein To Sabhi', videoId: 'Ag8JpA02WjY' },
+                { hindi: 'मुझसे पहली सी मोहब्बत', english: 'Mujhse Pehli Si Mohabbat', videoId: 'fUKoNyxcT-o' },
+                { hindi: 'रफ़्ता रफ़्ता वो मेरी', english: 'Rafta Rafta Woh Meri', videoId: 'Y01l7QTtIoE' },
+                { hindi: 'मैं होश में था', english: 'Main Hosh Mein Tha', videoId: 'KmK_Sj8QAO4' },
+                { hindi: 'अभी तो मैं जवान हूँ', english: 'Abhi To Main Jawan Hoon', videoId: 'lb8P72Pe__I' },
+                { hindi: 'मुझे तुम नज़र से', english: 'Mujhe Tum Nazar Se', videoId: 'RUvMqpfNXVs' },
+                { hindi: 'ये दर्द मेरा', english: 'Ye Dard Mera', videoId: 'fcuzBA_wx2Q' },
+                { hindi: 'बात करनी मुझे मुश्किल', english: 'Baat Karni Mujhe Mushkil', videoId: 'O2deEyi4AyE' },
+                { hindi: 'पत्ता पत्ता बूटा बूटा', english: 'Patta Patta Boota Boota', videoId: 'ivAJV9B3Y4Y' },
+                { hindi: 'ग़ज़ल गाइए', english: 'Ghazal Gaaie', videoId: 'xXtLES78QK8' },
+                { hindi: 'आप को भूल जाएँ', english: 'Aap Ko Bhool Jayein', videoId: 'HXZhuHoNgDc' },
+                { hindi: 'देख तो दिल की जान से', english: 'Dekh To Dil Ki Jaan Se', videoId: 'hsdQcEjK7SI' },
+                { hindi: 'नज़र से कहदो जी', english: 'Nazar Se Kehdo Ji', videoId: 'WxvZJmlgVPM' },
+                { hindi: 'उजाले अपनी याद के', english: 'Ujaale Apni Yaad Ke', videoId: '6VojrF-iTPs' },
+                { hindi: 'वो काग़ज़ की कश्ती', english: 'Wo Kagaz Ki Kashti', videoId: 'xEdAiJiwkDE' },
+                { hindi: 'नक़्श फ़रियादी है', english: 'Naqsh Fariyadi Hai', videoId: 'g1EMFBMaogk' },
+                { hindi: 'दिल-ए-नादाँ तुझे हुआ', english: 'Dil-E-Nadan Tujhe Hua', videoId: 'B2UssYCNYVE' },
+                { hindi: 'ये मौसम रंगीन सामाँ', english: 'Ye Mausam Rangeen Sama', videoId: '8B1NXnZw9rs' }
+            ]},
+
+            // Music Directors (as artists)
+            { hindi: 'एस.डी. बर्मन', english: 'S.D. Burman', color: '#2c3e50', songs: [
+                { hindi: 'वहाँ कौन है तेरा', english: 'Wahan Kaun Hai Tera', videoId: 'nezFXDk4jYA' },
+                { hindi: 'सुन मेरे बंधु रे', english: 'Sun Mere Bandhu Re', videoId: 'b0E2g6feSMQ' },
+                { hindi: 'तेरे मेरे मिलन की ये', english: 'Tere Mere Milan Ki Yeh', videoId: 'plBeDGbdGzA' },
+                { hindi: 'सुहाना सफ़र', english: 'Suhana Safar', videoId: 'QCrjU6FafUk' },
+                { hindi: 'तुझे क्या सुनाऊँ मैं', english: 'Tujhe Kya Sunaaoon Main', videoId: 'nc8wYuZyMdU' },
+                { hindi: 'है अपना दिल तो आवारा', english: 'Hai Apna Dil To Awara', videoId: 'cTfmwD9dVdY' },
+                { hindi: 'गुनगुना रहे हैं भँवरे', english: 'Gun Guna Rahe Hain Bhanware', videoId: 'e0sCtjorpRk' },
+                { hindi: 'खोया खोया चाँद', english: 'Khoya Khoya Chand', videoId: '1IhtgnHHkZ4' },
+                { hindi: 'सोलहवाँ साल है', english: 'Solva Saal Hai', videoId: 'W4wnlfwemVc' },
+                { hindi: 'जिया बेक़रार है', english: 'Jiya Beqarar Hai', videoId: '8CVuDAyM0gU' },
+                { hindi: 'लाखों हैं निगाह में', english: 'Lakhon Hain Nigah Mein', videoId: '3exI4E9fbys' },
+                { hindi: 'ये रात भीगी भीगी', english: 'Yeh Raat Bheegi Bheegi', videoId: 'Kf6VZmPn3zA' },
+                { hindi: 'वक़्त ने किया', english: 'Waqt Ne Kiya', videoId: 'w1Jf9PM7mpA' },
+                { hindi: 'तुम पुकार लो', english: 'Tum Pukar Lo', videoId: '9QtjSFnNTmQ' },
+                { hindi: 'ना तुम हमें जानो', english: 'Na Tum Hamein Jano', videoId: 'AuF-N8V3JXg' },
+                { hindi: 'सुनो ग़ज़ल क्या गाए', english: 'Suno Gazal Kya Gaye', videoId: 'MF7EhAB0um8' },
+                { hindi: 'ठंडी हवाएँ', english: 'Thandi Hawayein', videoId: 'bTmYReTJkmU' },
+                { hindi: 'मेघा छाए आधी रात', english: 'Megha Chhaye Aadhi Raat', videoId: 'M6tPdC9gU5U' },
+                { hindi: 'धीरे से आजा', english: 'Dhire Se Aaja', videoId: 'dmRjz0tMJC8' },
+                { hindi: 'कोरा काग़ज़ था ये मन मेरा', english: 'Kora Kagaz Tha Yeh Man Mera', videoId: 'kqXs4GGp8bw' }
+            ]},
+            { hindi: 'आर.डी. बर्मन', english: 'R.D. Burman', color: '#e67e22', songs: [
+                { hindi: 'दम मारो दम', english: 'Dum Maro Dum', videoId: 'kOrRYDJ4AuY' },
+                { hindi: 'चुरा लिया है तुमने', english: 'Chura Liya Hai Tumne', videoId: 'seFeZOgyFsc' },
+                { hindi: 'कुछ तो लोग कहेंगे', english: 'Kuch Toh Log Kahenge', videoId: 'X6q7BVZXOUU' },
+                { hindi: 'तेरे बिना ज़िन्दगी से', english: 'Tere Bina Zindagi Se', videoId: 'hLuXy8yhHYQ' },
+                { hindi: 'ये शाम मस्तानी', english: 'Yeh Sham Mastani', videoId: 'tNrpDUn9vxI' },
+                { hindi: 'रिमझिम गिरे सावन', english: 'Rimjhim Gire Sawan', videoId: 'JQoSSJDZxOo' },
+                { hindi: 'रूप तेरा मस्ताना', english: 'Roop Tera Mastana', videoId: 'smyWxKykPJg' },
+                { hindi: 'मुसाफ़िर हूँ यारों', english: 'Musafir Hoon Yaaron', videoId: 'Yd62azPw4hI' },
+                { hindi: 'ओ मेरे दिल के चैन', english: 'O Mere Dil Ke Chain', videoId: 'LGyh0h-Jmko' },
+                { hindi: 'पिया तू अब तो आजा', english: 'Piya Tu Ab To Aaja', videoId: 'PrYlUq48hIA' },
+                { hindi: 'महबूबा महबूबा', english: 'Mehbooba Mehbooba', videoId: 'lzxLuWceguA' },
+                { hindi: 'यम्मा यम्मा', english: 'Yamma Yamma', videoId: 'YeCzyMgNJXs' },
+                { hindi: 'तेरे मेरे होंठों पे', english: 'Tere Mere Hoton Pe', videoId: 'AShXAIyScmw' },
+                { hindi: 'बड़े अच्छे लगते हैं', english: 'Bade Acche Lagte Hain', videoId: 'p5EeJ9bHAOI' },
+                { hindi: 'दुनिया में लोगों को', english: 'Duniya Mein Logon Ko', videoId: 'r4K-ptmVHaA' },
+                { hindi: 'दिल क्या करे जब किसी को', english: 'Dil Kya Kare Jab Kisi Ko', videoId: 'iaaBqrQrtUM' },
+                { hindi: 'बीती ना बिताई रैना', english: 'Beeti Na Bitai Raina', videoId: 'kfyMS6apDbQ' },
+                { hindi: 'मेरी नज़र है तुझ पे', english: 'Meri Nazar Hai Tujh Pe', videoId: 'VViO6-iPKHk' },
+                { hindi: 'आज रपट जाए', english: 'Aaj Rapat Jaye', videoId: 'WpxcUsLevfs' },
+                { hindi: 'हम बेवफ़ा हरगिज़ ना थे', english: 'Hum Bewafa Hargiz Na The', videoId: '2CeEnk_3o5g' }
+            ]},
+            { hindi: 'शंकर-जयकिशन', english: 'Shankar-Jaikishan', color: '#3498db', songs: [
+                { hindi: 'आवारा हूँ', english: 'Awara Hoon', videoId: 'QUmlM-Qr_Kc' },
+                { hindi: 'मेरा जूता है जापानी', english: 'Mera Joota Hai Japani', videoId: 'fy7P_Uu3alA' },
+                { hindi: 'रमैया वस्तावैया', english: 'Ramaiya Vastavaiya', videoId: 'OOp5HpjHrCw' },
+                { hindi: 'प्यार हुआ इक़रार हुआ', english: 'Pyar Hua Iqrar Hua', videoId: 'xkl1QwNEuYs' },
+                { hindi: 'जीना यहाँ मरना यहाँ', english: 'Jeena Yahan Marna Yahan', videoId: 'e31rwfmp-Zs' },
+                { hindi: 'एहसान तेरा होगा मुझ पर', english: 'Ehsaan Tera Hoga Mujh Par', videoId: 'FQOGWitvUbw' },
+                { hindi: 'ओ मेरे सोना रे', english: 'O Mere Sona Re', videoId: 'sITOjxJVY2c' },
+                { hindi: 'ऐसे ना मुझे तुम देखो', english: 'Aise Na Mujhe Tum Dekho', videoId: '4BAfJVRol6k' },
+                { hindi: 'ये रात भीगी भीगी', english: 'Yeh Raat Bheegi Bheegi', videoId: 'Kf6VZmPn3zA' },
+                { hindi: 'मैं ज़िन्दगी का साथ', english: 'Main Zindagi Ka Saath', videoId: '8xLGdI9_jak' },
+                { hindi: 'है अपना दिल तो आवारा', english: 'Hai Apna Dil To Aawara', videoId: 'cTfmwD9dVdY' },
+                { hindi: 'दोस्त दोस्त ना रहा', english: 'Dost Dost Na Raha', videoId: 'Y3ucI5rBFFk' },
+                { hindi: 'मुड़ मुड़ के ना देख', english: 'Mud Mud Ke Na Dekh', videoId: 'EBF_-TLwIdY' },
+                { hindi: 'ओ हसीना ज़ुल्फ़ोंवाली', english: 'O Haseena Zulfonwali', videoId: '1IhtgnHHkZ4' },
+                { hindi: 'दिल अपना और प्रीत पराई', english: 'Dil Apna Aur Preet Parai', videoId: 'vTxCkRFLskk' },
+                { hindi: 'आज फिर जीने की तमन्ना है', english: 'Aaj Phir Jeene Ki Tamanna Hai', videoId: 'Eylt4Rbq-RA' },
+                { hindi: 'रात के हमसफ़र', english: 'Raat Ke Hamsafar', videoId: '6fPC-mPXKaM' },
+                { hindi: 'ये मेरा दीवानापन है', english: 'Yeh Mera Deewanapan Hai', videoId: 'jBxDcoFVdVQ' },
+                { hindi: 'बोल राधा बोल', english: 'Bol Radha Bol', videoId: 'uwVnp4qbbz8' },
+                { hindi: 'सब कुछ सीखा हमने', english: 'Sab Kuch Seekha Humne', videoId: 'Td3J6mAwwYU' }
+            ]},
+            { hindi: 'लक्ष्मीकांत-प्यारेलाल', english: 'Laxmikant-Pyarelal', color: '#9b59b6', songs: [
+                { hindi: 'दीदी तेरा देवर दीवाना', english: 'Didi Tera Devar Deewana', videoId: 'YuBv3Qbo_hE' },
+                { hindi: 'मेरे नैना सावन भादों', english: 'Mere Naina Sawan Bhadon', videoId: '_4Ccxj_A4UU' },
+                { hindi: 'एक दो तीन', english: 'Ek Do Teen', videoId: 'f1QOw1WdLtA' },
+                { hindi: 'बिंदिया चमकेगी', english: 'Bindiya Chamkegi', videoId: 'CbZNp3CZrB0' },
+                { hindi: 'क्या ख़ूब लगती हो', english: 'Kya Khoob Lagti Ho', videoId: 'g7XhrF-jM74' },
+                { hindi: 'ॐ शांति ॐ', english: 'Om Shanti Om', videoId: 'cBqq_3d_tO0' },
+                { hindi: 'डफ़ली वाले डफ़ली बजा', english: 'Dafli Wale Dafli Baja', videoId: 'hXBGaKLkpwc' },
+                { hindi: 'ये चाँद सा रोशन चेहरा', english: 'Yeh Chand Sa Roshan Chehra', videoId: 'OZ4YnZ3kDe4' },
+                { hindi: 'तेरा मेरा साथ रहे', english: 'Tera Mera Saath Rahe', videoId: '44ZFwSyUPDM' },
+                { hindi: 'माय नेम इज़ लखन', english: 'My Name Is Lakhan', videoId: 'kKC1hAcPoI4' },
+                { hindi: 'आज कल तेरे मेरे प्यार के', english: 'Aaj Kal Tere Mere Pyar Ke', videoId: 'ulEiyaxHx4s' },
+                { hindi: 'नी सुलताना रे', english: 'Ni Sultana Re', videoId: 'zHtfMDkX7TM' },
+                { hindi: 'सत्यम शिवम सुन्दरम', english: 'Satyam Shivam Sundaram', videoId: 'BuToisSnY_g' },
+                { hindi: 'नैनों में सपना', english: 'Nainon Mein Sapna', videoId: 'V6VLHKjPlD8' },
+                { hindi: 'पान खाए सैंया हमारो', english: 'Paan Khaye Saiyan Hamaro', videoId: 'K0dycK64DnA' },
+                { hindi: 'तूने ओ रंगीले', english: 'Tune O Rangile', videoId: 'W6Op1RjLXQg' },
+                { hindi: 'बॉबी', english: 'Bobby Title Song', videoId: 'Lbdjq04foDk' },
+                { hindi: 'धन्नो की आँखों में', english: 'Dhanno Ki Aankhon Mein', videoId: 'OUyizum5Jr4' },
+                { hindi: 'बाहों में चले आओ', english: 'Bahon Mein Chale Aao', videoId: 'DBoljd1XtpM' },
+                { hindi: 'ये दोस्ती हम नहीं तोड़ेंगे', english: 'Yeh Dosti Hum Nahi Todenge', videoId: 'pzfPccOlY_s' }
+            ]},
+
+            // Bhajans / Classical
+            { hindi: 'भीमसेन जोशी', english: 'Bhimsen Joshi', color: '#f39c12', songs: [
+                { hindi: 'मिले सुर मेरा तुम्हारा', english: 'Mile Sur Mera Tumhara', videoId: 'k8DtPqXjptM' },
+                { hindi: 'जो भजे हरि को सदा', english: 'Jo Bhaje Hari Ko Sada', videoId: 'EqlYN2hHYtY' },
+                { hindi: 'पिया तोसे नैना लागे रे', english: 'Piya Tose Naina Laage Re', videoId: 'guPMb2RvUJQ' },
+                { hindi: 'जागो मोहन प्यारे', english: 'Jago Mohan Pyare', videoId: 'YWwQf829MA8' },
+                { hindi: 'राग तोड़ी', english: 'Raag Todi', videoId: '9vmlajlGQ90' },
+                { hindi: 'राग भैरवी', english: 'Raag Bhairavi', videoId: 'FN-AQmSXagk' },
+                { hindi: 'राग मियां की मल्हार', english: 'Raag Miyan Ki Malhar', videoId: 'RqwE6K8Dy-g' },
+                { hindi: 'राग दरबारी', english: 'Raag Darbari', videoId: 'MDh9HvgN88k' },
+                { hindi: 'मन मोहन', english: 'Man Mohan', videoId: 'IMZ8Y0n4YNs' },
+                { hindi: 'राग यमन', english: 'Raag Yaman', videoId: 'S0ioBZItZ2A' },
+                { hindi: 'भजन सुनाओ रे', english: 'Bhajan Sunao Re', videoId: '_tdYY6lUw9g' },
+                { hindi: 'भवानी दयानी', english: 'Bhavani Dayani', videoId: 'eqqNxsyZPHI' },
+                { hindi: 'देवा हो देवा गणपति देवा', english: 'Deva Ho Deva Ganpati Deva', videoId: 'sGAXaf9THPs' },
+                { hindi: 'राग पूरिया धनाश्री', english: 'Raag Puriya Dhanashri', videoId: 'EUIsvE-Xazg' },
+                { hindi: 'माझे माहेर पंढरी', english: 'Majhe Maher Pandhari', videoId: 'MHTz8OEYqTw' },
+                { hindi: 'संत कबीर भजन', english: 'Sant Kabir Bhajan', videoId: 'crQfwtZhFx0' },
+                { hindi: 'राग देश', english: 'Raag Desh', videoId: 'rWyMZ_yzHlc' },
+                { hindi: 'जय जगदीश्वरी', english: 'Jai Jagdishwari', videoId: 'oUCAfzmoLHA' },
+                { hindi: 'जो भजे हरि को सदा (विस्तृत)', english: 'Jo Bhaje Hari Ko Sada (Extended)', videoId: 'dmfMXOz_RYo' },
+                { hindi: 'भीमसेन जोशी भजन संग्रह', english: 'Bhimsen Joshi Bhajan Collection', videoId: 'Y3dAvjE6Z7Y' }
+            ]},
+
+            // Modern Legends
+            { hindi: 'सोनू निगम', english: 'Sonu Nigam', color: '#e74c3c', songs: [
+                { hindi: 'कल हो ना हो', english: 'Kal Ho Naa Ho', videoId: 'g0eO74UmRBs' },
+                { hindi: 'सूरज हुआ मद्धम', english: 'Suraj Hua Maddham', videoId: 'iqNS2Qe4pp0' },
+                { hindi: 'संदेसे आते हैं', english: 'Sandese Aate Hain', videoId: 'yccGxvIydKg' },
+                { hindi: 'अभी मुझ में कहीं', english: 'Abhi Mujh Mein Kahin', videoId: 'usSA3mPzOJY' },
+                { hindi: 'मैं अगर कहूँ', english: 'Main Agar Kahoon', videoId: 'DAYszemgPxc' },
+                { hindi: 'मुझसे शादी करोगी', english: 'Mujhse Shaadi Karogi', videoId: 'n7MjuaR7ZlI' },
+                { hindi: 'सोनियो', english: 'Soniyo', videoId: 'tM3zHb3-W-8' },
+                { hindi: 'साथिया', english: 'Saathiya', videoId: 'eMA6GHTQ4WA' },
+                { hindi: 'ये दिल दीवाना', english: 'Yeh Dil Deewana', videoId: '09DLlXKwJJU' },
+                { hindi: 'मैं हूँ ना', english: 'Main Hoon Na', videoId: 'DIJW7rWPkSw' },
+                { hindi: 'तुमसे मिलके दिल का', english: 'Tumse Milke Dil Ka', videoId: 'rIujePFpuCU' },
+                { hindi: 'पंछी नदिया पवन के', english: 'Panchi Nadiya Pawan Ke', videoId: 'FVBgbuw6j14' },
+                { hindi: 'चाँद सिफ़ारिश', english: 'Chand Sifarish', videoId: 'zWEOx7TSM6I' },
+                { hindi: 'दिल ने जिसे अपना कहा', english: 'Dil Ne Jise Apna Kaha', videoId: 'L_1hmL2Oc-0' },
+                { hindi: 'इस दीवाने लड़के को', english: 'Is Deewane Ladke Ko', videoId: 'NbAebhHH4kc' },
+                { hindi: 'तुम्ही देखो ना', english: 'Tumhi Dekho Na', videoId: 'DULDIS2qlCU' },
+                { hindi: 'वो पहली बार', english: 'Woh Pehli Baar', videoId: 'KsFCVaDiegU' },
+                { hindi: 'दीवाना तेरा', english: 'Deewana Tera', videoId: 'J8zlroVMYeM' },
+                { hindi: 'आ भी जा तू कहीं से', english: 'Aa Bhi Ja Tu Kahin Se', videoId: 'i4YUugR043s' },
+                { hindi: 'ऐसा दीवाना', english: 'Aisa Deewana', videoId: 'X4TyG9grBSw' }
+            ]},
+            { hindi: 'श्रेया घोषाल', english: 'Shreya Ghoshal', color: '#e91e63', songs: [
+                { hindi: 'डोला रे डोला', english: 'Dola Re Dola', videoId: 'B4HbUt58eFU' },
+                { hindi: 'तेरी ओर', english: 'Teri Ore', videoId: 'CWfCp96-yck' },
+                { hindi: 'बरसो रे', english: 'Barso Re', videoId: 'asw-wTDzGUQ' },
+                { hindi: 'जादू है नशा है', english: 'Jaadu Hai Nasha Hai', videoId: 'gTSL0Rv0am4' },
+                { hindi: 'पियू बोले', english: 'Piyu Bole', videoId: 'ZAkr0KFFLLs' },
+                { hindi: 'सुन रहा है ना तू', english: 'Sun Raha Hai Na Tu (Female)', videoId: 'hm0Gca2q0eE' },
+                { hindi: 'दीवानी मस्तानी', english: 'Deewani Mastani', videoId: 'h6lHUn20J5g' },
+                { hindi: 'नगाड़ा संग ढोल', english: 'Nagada Sang Dhol', videoId: '3X7x4Ye-tqo' },
+                { hindi: 'तुझ में रब दिखता है', english: 'Tujh Mein Rab Dikhta Hai', videoId: 'eWd4cSUsDHg' },
+                { hindi: 'बैरी पिया', english: 'Bairi Piya', videoId: 'c0udXSNMRhk' },
+                { hindi: 'अगर तुम मिल जाओ', english: 'Agar Tum Mil Jao', videoId: 'olTVf-fKfKw' },
+                { hindi: 'मनवा लागे', english: 'Manwa Laage', videoId: 'd8IT-16kA8M' },
+                { hindi: 'घूमर', english: 'Ghoomar', videoId: 'CU1tFtk_NFY' },
+                { hindi: 'चिकनी चमेली', english: 'Chikni Chameli', videoId: 'MQM7CNoAsBI' },
+                { hindi: 'साँस में तेरी', english: 'Saans Mein Teri', videoId: 'VAt6TO2gdko' },
+                { hindi: 'राबता', english: 'Raabta', videoId: 'Sqbeoe5UEOM' },
+                { hindi: 'सिलसिला ये चाहत का', english: 'Silsila Ye Chahat Ka', videoId: 'yWNzKpUVkN8' },
+                { hindi: 'आमी जे तोमार', english: 'Ami Je Tomar', videoId: 'L0bv9D3epkA' },
+                { hindi: 'मुनबे वा', english: 'Munbe Vaa', videoId: 'ebUJKhC9Uk0' },
+                { hindi: 'सुन रहा है ना तू', english: 'Sunn Raha Hai Na Tu', videoId: 'inEu2qQuGZ8' }
+            ]},
+            { hindi: 'अरिजीत सिंह', english: 'Arijit Singh', color: '#2ecc71', songs: [
+                { hindi: 'तुम ही हो', english: 'Tum Hi Ho', videoId: 'IJq0yyWug1k' },
+                { hindi: 'गेरुआ', english: 'Gerua', videoId: 'AEIVhBS6baE' },
+                { hindi: 'चन्ना मेरेया', english: 'Channa Mereya', videoId: 'bzSTpdcs-EI' },
+                { hindi: 'अगर तुम साथ हो', english: 'Agar Tum Saath Ho', videoId: 'sK7riqg2mr4' },
+                { hindi: 'ऐ दिल है मुश्किल', english: 'Ae Dil Hai Mushkil', videoId: '6FURuLYrR_Q' },
+                { hindi: 'फिर भी तुमको चाहूँगा', english: 'Phir Bhi Tumko Chaahunga', videoId: '_iktURk0X-A' },
+                { hindi: 'सोच ना सके', english: 'Soch Na Sake', videoId: 'IQ-IzgNhvhg' },
+                { hindi: 'हमारी अधूरी कहानी', english: 'Hamari Adhuri Kahani', videoId: 'f3FFOBrMmdg' },
+                { hindi: 'समझावां', english: 'Samjhawan', videoId: 'H2f7MZaw3Yo' },
+                { hindi: 'बोलना', english: 'Bolna', videoId: 'GYFDRoJtfGM' },
+                { hindi: 'खैरियत', english: 'Khairiyat', videoId: 'hoNb6HuNmU0' },
+                { hindi: 'केसरिया', english: 'Kesariya', videoId: 'BddP6PYo2gs' },
+                { hindi: 'अपना बना ले', english: 'Apna Bana Le', videoId: 'ElZfdU54Cp8' },
+                { hindi: 'लव यू ज़िंदगी', english: 'Love You Zindagi', videoId: 'RphVWZZeWxo' },
+                { hindi: 'हवाएं', english: 'Hawayein', videoId: 'cs1e0fRyI18' },
+                { hindi: 'दिल दियाँ गल्लाँ', english: 'Dil Diyan Gallan', videoId: 'SAcpESN_Fk4' },
+                { hindi: 'तेरा यार हूँ मैं', english: 'Tera Yaar Hoon Main', videoId: 'EatzcaVJRMs' },
+                { hindi: 'कलंक', english: 'Kalank Title Track', videoId: '5PoptCZnS6A' },
+                { hindi: 'वे माही', english: 'Ve Maahi', videoId: 'Z1-qmKn7DQY' },
+                { hindi: 'राबता', english: 'Raabta', videoId: 'tpYZZIEO-f0' }
+            ]},
+            { hindi: 'राहत फ़तेह अली ख़ान', english: 'Rahat Fateh Ali Khan', color: '#3498db', songs: [
+                { hindi: 'ओ रे पिया', english: 'O Re Piya', videoId: 'iv7lcUkFVSc' },
+                { hindi: 'तेरे मस्त मस्त दो नैन', english: 'Tere Mast Mast Do Nain', videoId: 'oyLVu753XJw' },
+                { hindi: 'जिया धड़क धड़क', english: 'Jiya Dhadak Dhadak', videoId: 'ryL1tQnoRYE' },
+                { hindi: 'मन की लगन', english: 'Mann Ki Lagan', videoId: 'jUDP6LmgcCE' },
+                { hindi: 'तेरी ओर', english: 'Teri Ore', videoId: 'GLEx6bhPu7s' },
+                { hindi: 'ज़रूरी था', english: 'Zaroori Tha', videoId: '6-n_szx2XRE' },
+                { hindi: 'तेरे बिन', english: 'Tere Bin', videoId: 'hejXc_FSYb8' },
+                { hindi: 'दगाबाज़ रे', english: 'Dagabaaz Re', videoId: '0KozfDYK1EU' },
+                { hindi: 'सजदा', english: 'Sajda', videoId: '3rPEWcY6Oww' },
+                { hindi: 'दिल तो बच्चा है जी', english: 'Dil To Bachcha Hai Ji', videoId: 'hQ3dcgFKPIY' },
+                { hindi: 'आज दिन चढ़ेया', english: 'Aaj Din Chadheya', videoId: 'IImcBEHuDRI' },
+                { hindi: 'तेरी मेरी', english: 'Teri Meri', videoId: 'xkT5KySmGHw' },
+                { hindi: 'पी लूँ', english: 'Pee Loon', videoId: 'D8XFTglfSMg' },
+                { hindi: 'हल्का हल्का', english: 'Halka Halka', videoId: 'QQEu7GTa6zk' },
+                { hindi: 'अफ़रीन अफ़रीन', english: 'Afreen Afreen', videoId: 'kw4tT7SCmaY' },
+                { hindi: 'परेशान', english: 'Pareshaan', videoId: 'zQl7zYkEP6M' },
+                { hindi: 'तुम्हीं हो बंधु', english: 'Tumhi Ho Bandhu', videoId: 'o1RducJbUdc' },
+                { hindi: 'मैं जहाँ रहूँ', english: 'Main Jahaan Rahoon', videoId: 'Hq49zJc_Ezw' },
+                { hindi: 'अखियाँ', english: 'Akhiyan', videoId: 'kq19ZFnmze8' },
+                { hindi: 'गाये जा', english: 'Gaaye Ja', videoId: 'XcvFZQH-G6Q' }
+            ]},
+            { hindi: 'नुसरत फ़तेह अली ख़ान', english: 'Nusrat Fateh Ali Khan', color: '#d35400', songs: [
+                { hindi: 'अफ़रीन अफ़रीन', english: 'Afreen Afreen', videoId: '2F7G9bOIwlk' },
+                { hindi: 'तुम्हें दिल्लगी', english: 'Tumhe Dillagi', videoId: 'q4NVp-aFZSw' },
+                { hindi: 'दम मस्त कलंदर', english: 'Dam Mast Qalandar', videoId: 'SKZAiWSquA0' },
+                { hindi: 'अल्लाह हू', english: 'Allah Hoo', videoId: 'wjynrRhztU8' },
+                { hindi: 'मेरा पिया घर आया', english: 'Mera Piya Ghar Aaya', videoId: 'qoqlJGOQtuQ' },
+                { hindi: 'मस्त मस्त', english: 'Mustt Mustt', videoId: 'SDfELfpumEE' },
+                { hindi: 'ये जो हल्का हल्का सुरूर है', english: 'Yeh Jo Halka Halka Suroor Hai', videoId: 'TF_cOANSeJ8' },
+                { hindi: 'मेरे रश्के क़मर', english: 'Mere Rashke Qamar', videoId: 'gY01irEl8Eo' },
+                { hindi: 'सानू एक पल चैन ना आवे', english: 'Sanu Ek Pal Chain Na Aave', videoId: 'neqk34rPJfU' },
+                { hindi: 'नित खैर मंगा', english: 'Nit Khair Manga', videoId: 'f-s4mM9ls8o' },
+                { hindi: 'तू मेरा दिल तू मेरी जान', english: 'Tu Mera Dil Tu Meri Jaan', videoId: 'pGwWS5sHxhE' },
+                { hindi: 'वही खुदा है', english: 'Wohi Khuda Hai', videoId: 'gDOlh5FYHhg' },
+                { hindi: 'मस्त नज़रों से', english: 'Mast Nazron Se', videoId: 'GkejOgSZ8qw' },
+                { hindi: 'तेरे बिन नहीं लगदा', english: 'Tere Bin Nahi Lagda', videoId: '0gPGyTvkUus' },
+                { hindi: 'शाहबाज़ कलंदर', english: 'Shahbaz Qalandar', videoId: 'xxjKw7HZQEI' },
+                { hindi: 'किन्ना सोहना', english: 'Kinna Sohna', videoId: 'L5bD5pGhk6E' },
+                { hindi: 'मन अटकनियाँ', english: 'Man Atkaniyan', videoId: 'Lmv_WI0aLQE' },
+                { hindi: 'इस करम का करूँ शुक्र', english: 'Is Karam Ka Karoon Shukar', videoId: 'jpPvH0408zs' },
+                { hindi: 'अखियाँ उडीक दियाँ', english: 'Akhiyan Udeek Diyan', videoId: 'YSMIDIt2Ku4' },
+                { hindi: 'मेरी तौबा', english: 'Meri Tauba', videoId: 'eCrYl3xGzqQ' }
+            ]}
+        ];
+
+        // =================================================================
+        // STATE
+        // =================================================================
+        let currentVolume = 70;
+        let isMuted = false;
+        let ytPlayer = null;
+        let ytApiReady = false;
+
+        // What mode is the player in? 'news' or 'songs'
+        let playerMode = null;
+        let currentNewsIndex = null;
+        let currentArtistIndex = null;
+        let currentSongIndex = 0;
+
+        // Pagination
+        const ARTISTS_PER_PAGE = 12;
+        let artistPage = 0;
+
+        // ===== YouTube IFrame API Ready =====
+        function onYouTubeIframeAPIReady() {
+            ytApiReady = true;
+        }
+
+        // =================================================================
+        // SCREEN NAVIGATION
+        // =================================================================
+        function hideAllScreens() {
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('artist-screen').style.display = 'none';
+            document.getElementById('player-screen').style.display = 'none';
+        }
+
+        function showHomeScreen() {
+            destroyPlayer();
+            hideAllScreens();
+            document.getElementById('home-screen').style.display = 'flex';
+        }
+
+        function showArtistScreen() {
+            destroyPlayer();
+            hideAllScreens();
+            document.getElementById('artist-screen').style.display = 'flex';
+            renderArtistPage();
+        }
+
+        function showPlayerScreen() {
+            hideAllScreens();
+            document.getElementById('player-screen').style.display = 'flex';
+        }
+
+        // =================================================================
+        // BUILD HOME SCREEN - NEWS GRID
+        // =================================================================
+        function buildNewsGrid() {
+            const container = document.getElementById('news-grid');
+            channels.forEach((ch, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'grid-btn';
+                btn.style.borderColor = ch.color;
+                const badgeClass = ch.isLive ? 'is-live' : 'not-live';
+                const badgeContent = ch.isLive
+                    ? '<span class="live-dot"></span> LIVE'
+                    : 'RECORDED';
+                btn.innerHTML = `
+                    <span class="hindi-name">${ch.hindi}</span>
+                    <span class="eng-name">${ch.english}</span>
+                    <span class="live-badge ${badgeClass}">${badgeContent}</span>
+                `;
+                btn.onclick = () => playNews(index);
+                container.appendChild(btn);
+            });
+        }
+
+        // =================================================================
+        // BUILD ARTIST GRID (PAGINATED)
+        // =================================================================
+        function renderArtistPage() {
+            const container = document.getElementById('artist-grid');
+            container.innerHTML = '';
+            const totalPages = Math.ceil(artists.length / ARTISTS_PER_PAGE);
+            const start = artistPage * ARTISTS_PER_PAGE;
+            const end = Math.min(start + ARTISTS_PER_PAGE, artists.length);
+
+            for (let i = start; i < end; i++) {
+                const artist = artists[i];
+                const btn = document.createElement('div');
+                btn.className = 'grid-btn';
+                btn.style.borderColor = artist.color;
+                btn.innerHTML = `
+                    <span class="hindi-name">${artist.hindi}</span>
+                    <span class="eng-name">${artist.english}</span>
+                `;
+                btn.onclick = () => openArtistInPlayer(i);
+                container.appendChild(btn);
+            }
+
+            // Pagination controls
+            const pag = document.getElementById('artist-pagination');
+            pag.innerHTML = '';
+            if (totalPages > 1) {
+                const prevBtn = document.createElement('button');
+                prevBtn.className = 'page-btn';
+                prevBtn.textContent = '\u2190 \u092A\u093F\u091B\u0932\u093E (Prev)';
+                prevBtn.disabled = artistPage === 0;
+                prevBtn.onclick = () => { artistPage--; renderArtistPage(); };
+                pag.appendChild(prevBtn);
+
+                const info = document.createElement('span');
+                info.className = 'page-info';
+                info.textContent = `\u092A\u0943\u0937\u094D\u0920 ${artistPage + 1} / ${totalPages}`;
+                pag.appendChild(info);
+
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'page-btn';
+                nextBtn.textContent = '\u0905\u0917\u0932\u093E (Next) \u2192';
+                nextBtn.disabled = artistPage === totalPages - 1;
+                nextBtn.onclick = () => { artistPage++; renderArtistPage(); };
+                pag.appendChild(nextBtn);
+            }
+        }
+
+        // =================================================================
+        // BUILD BOTTOM STRIP (ALWAYS NEWS CHANNELS)
+        // =================================================================
+        function buildBottomNewsStrip() {
+            const strip = document.getElementById('bottom-strip');
+            strip.innerHTML = '';
+            channels.forEach((ch, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'strip-btn';
+                const badgeClass = ch.isLive ? 'is-live' : 'not-live';
+                const badgeText = ch.isLive ? 'LIVE' : 'REC';
+                btn.innerHTML = `${ch.hindi} (${ch.english}) <span class="strip-live-badge ${badgeClass}">${badgeText}</span>`;
+                if (playerMode === 'news' && index === currentNewsIndex) btn.classList.add('active');
+                btn.onclick = () => playNews(index);
+                strip.appendChild(btn);
+            });
+        }
+
+        // =================================================================
+        // BUILD ARTIST STRIP (TOP, SCROLLABLE)
+        // =================================================================
+        function buildArtistStrip() {
+            const strip = document.getElementById('artist-strip');
+            strip.innerHTML = '';
+            artists.forEach((artist, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'artist-strip-btn';
+                if (index === currentArtistIndex) btn.classList.add('active');
+                btn.textContent = `${artist.hindi}`;
+                btn.onclick = () => switchArtistInPlayer(index);
+                strip.appendChild(btn);
+            });
+            // Scroll to the active artist
+            setTimeout(() => {
+                const active = strip.querySelector('.active');
+                if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }, 50);
+        }
+
+        function switchArtistInPlayer(artistIndex) {
+            const previousArtist = currentArtistIndex;
+            currentArtistIndex = artistIndex;
+            // If switching to a different artist, reset song index since nothing from this artist is playing
+            if (artistIndex !== previousArtist) {
+                currentSongIndex = -1;
+            }
+            // Switch to songs mode (show song panel) if we were in news mode
+            if (playerMode === 'news') {
+                playerMode = 'songs';
+                currentNewsIndex = null;
+                setPlayerMode('songs');
+                const artist = artists[artistIndex];
+                document.getElementById('now-playing-label').textContent = `${artist.hindi} - ${artist.english} - गाना चुनें (Choose a Song)`;
+                document.getElementById('now-playing-label').style.color = artist.color;
+                document.getElementById('back-btn').onclick = () => showArtistScreen();
+                destroyPlayer();
+                showChooseSongMessage();
+                buildBottomNewsStrip();
+            }
+            // Update artist strip highlighting
+            const btns = document.querySelectorAll('.artist-strip-btn');
+            btns.forEach((btn, i) => {
+                btn.classList.toggle('active', i === artistIndex);
+            });
+            // Update song panel
+            buildSongPanel();
+        }
+
+        // =================================================================
+        // BUILD SONG PANEL (RIGHT SIDE)
+        // =================================================================
+        function buildSongPanel() {
+            const artist = artists[currentArtistIndex];
+            if (!artist || !artist.songs) return;
+
+            document.getElementById('song-panel-title').textContent = `${artist.hindi} - गाने`;
+            const list = document.getElementById('song-panel-list');
+            list.innerHTML = '';
+
+            artist.songs.forEach((song, index) => {
+                const item = document.createElement('div');
+                item.className = 'song-panel-item';
+                if (index === currentSongIndex && playerMode === 'songs') item.classList.add('active');
+                item.innerHTML = `
+                    <span class="sp-num">${index + 1}</span>
+                    <div>
+                        <span class="sp-hindi">${song.hindi}</span>
+                        <span class="sp-eng">${song.english}</span>
+                    </div>
+                `;
+                item.onclick = () => playSong(currentArtistIndex, index);
+                list.appendChild(item);
+            });
+
+            // Scroll to active song
+            setTimeout(() => {
+                const active = list.querySelector('.active');
+                if (active) active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 50);
+        }
+
+        // Show/hide artist strip and song panel based on mode
+        function setPlayerMode(mode) {
+            const artistStrip = document.getElementById('artist-strip');
+            const songPanel = document.getElementById('song-panel');
+            // Artist strip always visible so father can switch from news to songs
+            artistStrip.style.display = 'flex';
+            if (mode === 'news') {
+                songPanel.style.display = 'none';
+            } else {
+                songPanel.style.display = 'flex';
+            }
+        }
+
+        // Open artist in player (from artist grid) - shows player with song list, no auto-play
+        function openArtistInPlayer(artistIndex) {
+            playerMode = 'songs';
+            currentArtistIndex = artistIndex;
+            currentSongIndex = -1; // no song playing yet
+            currentNewsIndex = null;
+
+            const artist = artists[artistIndex];
+            document.getElementById('now-playing-label').textContent = `${artist.hindi} - ${artist.english} - गाना चुनें (Choose a Song)`;
+            document.getElementById('now-playing-label').style.color = artist.color;
+            document.getElementById('back-btn').onclick = () => showArtistScreen();
+
+            showPlayerScreen();
+            setPlayerMode('songs');
+            buildArtistStrip();
+            buildSongPanel();
+            buildBottomNewsStrip();
+            // Don't auto-play, show a message in the video area
+            destroyPlayer();
+            showChooseSongMessage();
+        }
+
+        // =================================================================
+        // OVERLAYS
+        // =================================================================
+        function showLoading() {
+            removeOverlay();
+            const container = document.getElementById('video-container');
+            const overlay = document.createElement('div');
+            overlay.className = 'video-message';
+            overlay.id = 'loading-overlay';
+            overlay.innerHTML = `
+                <div class="loading-spinner"></div>
+                <div class="msg-text">लोड हो रहा है... (Loading...)</div>
+            `;
+            container.appendChild(overlay);
+        }
+
+        function showError(fallbackUrl, label) {
+            removeOverlay();
+            const container = document.getElementById('video-container');
+            const overlay = document.createElement('div');
+            overlay.className = 'video-message';
+            overlay.id = 'error-overlay';
+            overlay.innerHTML = `
+                <div class="msg-text">यह वीडियो उपलब्ध नहीं है<br>(This video is not available)</div>
+                <a class="open-link" href="${fallbackUrl}" target="_blank">
+                    YouTube पर देखें (Open on YouTube)
+                </a>
+            `;
+            container.appendChild(overlay);
+        }
+
+        function removeOverlay() {
+            ['error-overlay', 'loading-overlay', 'choose-overlay'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.remove();
+            });
+        }
+
+        function showChooseSongMessage() {
+            removeOverlay();
+            const container = document.getElementById('video-container');
+            const overlay = document.createElement('div');
+            overlay.className = 'video-message';
+            overlay.id = 'choose-overlay';
+            overlay.innerHTML = `
+                <div style="font-size: 60px;">&#x266B;</div>
+                <div class="msg-text">दाईं ओर से गाना चुनें<br>(Choose a song from the right panel)</div>
+            `;
+            container.appendChild(overlay);
+        }
+
+        // =================================================================
+        // PLAYER MANAGEMENT
+        // =================================================================
+        function destroyPlayer() {
+            if (ytPlayer) {
+                try { ytPlayer.destroy(); } catch(e) {}
+                ytPlayer = null;
+            }
+            removeOverlay();
+            ensurePlayerDiv();
+        }
+
+        function ensurePlayerDiv() {
+            const container = document.getElementById('video-container');
+            let playerDiv = document.getElementById('yt-player');
+            if (!playerDiv) {
+                playerDiv = document.createElement('div');
+                playerDiv.id = 'yt-player';
+                container.insertBefore(playerDiv, container.firstChild);
+            }
+        }
+
+        function waitForApiThen(callback) {
+            if (ytApiReady) {
+                callback();
+            } else {
+                const check = setInterval(() => {
+                    if (ytApiReady) {
+                        clearInterval(check);
+                        callback();
+                    }
+                }, 200);
+            }
+        }
+
+        function applyVolume(player) {
+            player.setVolume(currentVolume);
+            if (isMuted) {
+                player.mute();
+            } else {
+                player.unMute();
+            }
+        }
+
+        // =================================================================
+        // PLAY NEWS CHANNEL
+        // =================================================================
+        function playNews(index) {
+            const ch = channels[index];
+            playerMode = 'news';
+            currentNewsIndex = index;
+            currentArtistIndex = null;
+
+            // UI
+            const liveClass = ch.isLive ? 'is-live' : 'not-live';
+            const liveText = ch.isLive ? 'LIVE' : 'RECORDED';
+            const label = document.getElementById('now-playing-label');
+            label.innerHTML = `${ch.hindi} - ${ch.english} <span class="now-playing-live ${liveClass}">${liveText}</span>`;
+            label.style.color = ch.color;
+            document.getElementById('back-btn').onclick = showHomeScreen;
+
+            showPlayerScreen();
+            setPlayerMode('news');
+            buildArtistStrip();
+            buildBottomNewsStrip();
+            destroyPlayer();
+            showLoading();
+
+            waitForApiThen(() => {
+                ytPlayer = new YT.Player('yt-player', {
+                    videoId: ch.videoId,
+                    width: '100%',
+                    height: '100%',
+                    playerVars: {
+                        autoplay: 1,
+                        rel: 0,
+                        modestbranding: 1,
+                        iv_load_policy: 3,
+                        controls: 1,
+                        fs: 1
+                    },
+                    events: {
+                        onReady: function(e) {
+                            removeOverlay();
+                            applyVolume(e.target);
+                        },
+                        onError: function() {
+                            removeOverlay();
+                            showError(`https://www.youtube.com/@${ch.handle}/live`, ch.english);
+                        }
+                    }
+                });
+            });
+        }
+
+        // =================================================================
+        // PLAY INDIVIDUAL SONG
+        // =================================================================
+        function playSong(artistIndex, songIndex) {
+            const artist = artists[artistIndex];
+            const song = artist.songs[songIndex];
+            playerMode = 'songs';
+            currentArtistIndex = artistIndex;
+            currentSongIndex = songIndex;
+            currentNewsIndex = null;
+
+            // UI
+            updateNowPlayingLabel(artist, song);
+            document.getElementById('back-btn').onclick = () => showArtistScreen();
+
+            showPlayerScreen();
+            setPlayerMode('songs');
+            buildArtistStrip();
+            buildSongPanel();
+            buildBottomNewsStrip();
+            destroyPlayer();
+            showLoading();
+
+            waitForApiThen(() => {
+                ytPlayer = new YT.Player('yt-player', {
+                    width: '100%',
+                    height: '100%',
+                    videoId: song.videoId,
+                    playerVars: {
+                        autoplay: 1,
+                        rel: 0,
+                        modestbranding: 1,
+                        iv_load_policy: 3,
+                        controls: 1,
+                        fs: 1
+                    },
+                    events: {
+                        onReady: function(e) {
+                            removeOverlay();
+                            applyVolume(e.target);
+                        },
+                        onStateChange: function(e) {
+                            // When video ends, play next song
+                            if (e.data === YT.PlayerState.ENDED) {
+                                const nextIdx = currentSongIndex + 1;
+                                if (nextIdx < artist.songs.length) {
+                                    playSong(artistIndex, nextIdx);
+                                } else {
+                                    // Loop back to first song
+                                    playSong(artistIndex, 0);
+                                }
+                            }
+                        },
+                        onError: function() {
+                            removeOverlay();
+                            // On error, try next song
+                            const nextIdx = currentSongIndex + 1;
+                            if (nextIdx < artist.songs.length) {
+                                playSong(artistIndex, nextIdx);
+                            } else {
+                                showError(`https://www.youtube.com/watch?v=${song.videoId}`, song.english);
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        function updateNowPlayingLabel(artist, song) {
+            const label = document.getElementById('now-playing-label');
+            if (song) {
+                label.textContent = `${artist.hindi} - ${song.hindi} (${song.english})`;
+            } else {
+                label.textContent = `${artist.hindi} - ${artist.english}`;
+            }
+            label.style.color = artist.color;
+        }
+
+        // =================================================================
+        // VOLUME CONTROLS
+        // =================================================================
+        function setVolume(vol) {
+            currentVolume = Math.max(0, Math.min(100, vol));
+            document.getElementById('volume-slider').value = currentVolume;
+            document.getElementById('vol-display').textContent = currentVolume;
+
+            if (currentVolume === 0) {
+                isMuted = true;
+                document.getElementById('mute-btn').classList.add('muted');
+                document.getElementById('mute-btn').innerHTML = '&#x1F507;';
+            } else {
+                isMuted = false;
+                document.getElementById('mute-btn').classList.remove('muted');
+                document.getElementById('mute-btn').innerHTML = '&#x1F50A;';
+            }
+
+            if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
+                ytPlayer.setVolume(currentVolume);
+                if (isMuted) ytPlayer.mute();
+                else ytPlayer.unMute();
+            }
+        }
+
+        function volumeUp() { setVolume(currentVolume + 10); }
+        function volumeDown() { setVolume(currentVolume - 10); }
+        function onVolumeSlider(val) { setVolume(parseInt(val)); }
+
+        function toggleMute() {
+            if (isMuted) {
+                isMuted = false;
+                document.getElementById('mute-btn').classList.remove('muted');
+                document.getElementById('mute-btn').innerHTML = '&#x1F50A;';
+                if (ytPlayer && typeof ytPlayer.unMute === 'function') {
+                    ytPlayer.unMute();
+                    ytPlayer.setVolume(currentVolume > 0 ? currentVolume : 50);
+                }
+                if (currentVolume === 0) setVolume(50);
+            } else {
+                isMuted = true;
+                document.getElementById('mute-btn').classList.add('muted');
+                document.getElementById('mute-btn').innerHTML = '&#x1F507;';
+                if (ytPlayer && typeof ytPlayer.mute === 'function') {
+                    ytPlayer.mute();
+                }
+            }
+        }
+
+        // =================================================================
+        // KEYBOARD SHORTCUTS
+        // =================================================================
+        document.addEventListener('keydown', function(e) {
+            const playerVisible = document.getElementById('player-screen').style.display === 'flex';
+            const artistVisible = document.getElementById('artist-screen').style.display === 'flex';
+
+            if (playerVisible) {
+                switch(e.key) {
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        volumeUp();
+                        break;
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        volumeDown();
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        if (playerMode === 'news' && currentNewsIndex !== null) {
+                            playNews((currentNewsIndex + 1) % channels.length);
+                        } else if (playerMode === 'songs' && currentArtistIndex !== null) {
+                            const artist = artists[currentArtistIndex];
+                            if (artist.songs && artist.songs.length > 0) {
+                                const nextIdx = currentSongIndex < 0 ? 0 : (currentSongIndex + 1) % artist.songs.length;
+                                playSong(currentArtistIndex, nextIdx);
+                            }
+                        }
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        if (playerMode === 'news' && currentNewsIndex !== null) {
+                            playNews((currentNewsIndex - 1 + channels.length) % channels.length);
+                        } else if (playerMode === 'songs' && currentArtistIndex !== null) {
+                            const artist = artists[currentArtistIndex];
+                            if (artist.songs && artist.songs.length > 0) {
+                                const prevIdx = currentSongIndex < 0 ? 0 : (currentSongIndex - 1 + artist.songs.length) % artist.songs.length;
+                                playSong(currentArtistIndex, prevIdx);
+                            }
+                        }
+                        break;
+                    case 'Escape':
+                    case 'Backspace':
+                        e.preventDefault();
+                        if (playerMode === 'news') showHomeScreen();
+                        else showArtistScreen();
+                        break;
+                    case 'm':
+                    case 'M':
+                        e.preventDefault();
+                        toggleMute();
+                        break;
+                }
+            } else if (artistVisible) {
+                const totalPages = Math.ceil(artists.length / ARTISTS_PER_PAGE);
+                switch(e.key) {
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        if (artistPage < totalPages - 1) { artistPage++; renderArtistPage(); }
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        if (artistPage > 0) { artistPage--; renderArtistPage(); }
+                        break;
+                    case 'Escape':
+                    case 'Backspace':
+                        e.preventDefault();
+                        showHomeScreen();
+                        break;
+                }
+            } else {
+                // Home screen - number keys for news channels
+                const num = parseInt(e.key);
+                if (num >= 1 && num <= channels.length) {
+                    playNews(num - 1);
+                }
+            }
+        });
+
+        // =================================================================
+        // INITIALIZE
+        // =================================================================
+        buildNewsGrid();
+        renderArtistPage();
+    </script>
+</body>
+</html>
