@@ -50,6 +50,20 @@ macOS blocks downloaded files by default. You need to do this **once** after unz
 
 > **Why a server?** YouTube embeds require HTTP — they don't work if you open the file directly (`file://`).
 
+### Raspberry Pi (always-on TV box)
+
+A Pi turns this into a real appliance: plug in the power and the TV shows Papa
+Ka TV fullscreen, no login, mouse only.
+
+```
+git clone https://github.com/shrenikchhajed1/Papa-Ka-TV.git
+cd Papa-Ka-TV
+bash raspberry-pi/install.sh
+sudo reboot
+```
+
+Full hardware list, tuning and troubleshooting: **[raspberry-pi/README.md](raspberry-pi/README.md)**
+
 ## Auto-Refresh (How It Works)
 
 Every time you launch the app, `refresh_ids.py` runs automatically and:
@@ -123,6 +137,7 @@ The launcher gracefully skips ngrok and just runs locally on `http://localhost:8
 | `start-papa-ka-tv.command` | macOS launcher (double-click to run) |
 | `start-papa-ka-tv.bat` | Windows launcher (double-click to run) |
 | `refresh_log.txt` | Diagnostic log from the last refresh run (auto-generated) |
+| `raspberry-pi/` | Raspberry Pi kiosk setup — installer, systemd services, kiosk launcher |
 | `README.md` | This file |
 
 ## Troubleshooting
