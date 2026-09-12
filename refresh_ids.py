@@ -131,12 +131,140 @@ def search_youtube(query, max_results=8):
         return []
 
 
+def _norm(text):
+    """Lowercase and strip everything but letters/digits, so 'TV9 Bharatvarsh'
+    and 'tv9bharatvarsh' compare equal."""
+    return re.sub(r"[^a-z0-9]", "", text.lower())
+
+
+def _parse_watching(blob):
+    """Pull the concurrent viewer count out of a lockup, as an int."""
+    m = re.search(r'"content":\s*"([\d.,]+)([KMB]?) watching"', blob)
+    if not m:
+        return 0
+    try:
+        n = float(m.group(1).replace(",", ""))
+    except ValueError:
+        return 0
+    return int(n * {"K": 1_000, "M": 1_000_000, "B": 1_000_000_000}.get(m.group(2), 1))
+
+
+def _title_score(title, handle):
+    """How much a title looks like the channel's rolling 24x7 feed.
+
+    Zero means "this is a one-off event stream" - a press conference or a
+    single story, which ends within hours and then plays back as a recording.
+    Only a positive score is worth using.
+    """
+    t = _norm(title)
+    if not t:
+        return 0
+    # "Aaj Tak LIVE TV", "TV9 Bharatvarsh LIVE", "News18 India TV Live" - the
+    # channel branding its own continuous feed.
+    if _norm(handle) in t and "live" in t:
+        return 100
+    if "livetv" in t or "tvlive" in t:
+        return 90
+    # "Republic TV 24x7"
+    if "24x7" in t or "24hours" in t:
+        return 85
+    return 0
+
+
+def get_main_live_stream(handle, retries=2):
+    """Find the channel's rolling 24x7 live stream.
+
+    Reads the channel's /streams tab, keeps only currently-live entries, and
+    prefers the one whose title looks like the main feed rather than a one-off
+    event. Returns (video_id, title) or (None, reason).
+    """
+    data = None
+    reason = "not attempted"
+
+    # YouTube intermittently serves a page with no ytInitialData. Falling back
+    # to /live on the first miss is how an event stream sneaks in, so retry
+    # before giving up.
+    for attempt in range(retries + 1):
+        try:
+            resp = url_open(f"https://www.youtube.com/@{handle}/streams", timeout=20)
+            html = resp.read().decode("utf-8", errors="ignore")
+        except Exception as e:
+            reason = f"{type(e).__name__}: {e}"
+            if attempt < retries:
+                time.sleep(1.5)
+            continue
+
+        m = re.search(r"var ytInitialData = (\{.*?\});</script>", html)
+        if not m:
+            reason = "no ytInitialData"
+            if attempt < retries:
+                time.sleep(1.5)
+            continue
+
+        try:
+            data = json.loads(m.group(1))
+            break
+        except Exception as e:
+            reason = f"bad ytInitialData: {e}"
+            if attempt < retries:
+                time.sleep(1.5)
+
+    if data is None:
+        return None, reason
+
+    candidates = []
+
+    def walk(node):
+        if isinstance(node, dict):
+            lockup = node.get("lockupViewModel")
+            if isinstance(lockup, dict) and lockup.get("contentId"):
+                blob = json.dumps(lockup, ensure_ascii=False)
+                # YouTube moved this page to lockupViewModel; the badge style is
+                # the only reliable "live right now" marker left on it.
+                if "THUMBNAIL_OVERLAY_BADGE_STYLE_LIVE" in blob:
+                    meta = lockup.get("metadata", {}).get("lockupMetadataViewModel", {})
+                    title = meta.get("title", {}).get("content", "")
+                    candidates.append((lockup["contentId"], title, _parse_watching(blob)))
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+
+    walk(data)
+
+    seen = set()
+    unique = []
+    for vid, title, watching in candidates:
+        if vid not in seen:
+            seen.add(vid)
+            unique.append((vid, title, watching))
+
+    if not unique:
+        return None, "no live streams listed"
+
+    # Title decides; viewers only break ties between equally-branded feeds.
+    scored = [(_title_score(t, handle), w, vid, t) for vid, t, w in unique]
+    best = max(scored, key=lambda c: (c[0], c[1]))
+    if best[0] == 0:
+        return None, f"{len(unique)} live, none branded as a main feed"
+    return best[2], best[3]
+
+
 def get_live_video_id(handle, retries=2):
     """Fetch the current live stream video ID for a YouTube channel handle.
     
     Returns (video_id, is_live, method_or_error) tuple for diagnostics.
     is_live is True if the stream is currently live, False otherwise.
     """
+    # Prefer the channel's rolling 24x7 feed. /live names whichever stream
+    # YouTube considers current, which on a news channel is often a one-off
+    # event that ends within hours.
+    main_id, detail = get_main_live_stream(handle)
+    if main_id:
+        return main_id, True, f"main-feed ({detail[:40]})"
+    log(f"  Note: {handle} - main feed not found ({detail}); falling back to /live")
+
     url = f"https://www.youtube.com/@{handle}/live"
 
     for attempt in range(retries + 1):
